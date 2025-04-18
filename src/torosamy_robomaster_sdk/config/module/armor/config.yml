@@ -1,0 +1,211 @@
+LoadIds: [0,1]
+
+0:
+  CameraID: 0
+  ReceiveID: 0
+  SendId: 0
+  FireControl:
+    Armor:
+      BulletPitch: 75.0
+      # shu yue xiao yue wang you
+      OffestYaw: [
+        -4.0, # 0 ~ 1
+        -4.3, # 1 ~ 2
+        -4.5, # 2 ~ 3
+        -4, # 3 ~ 4
+        -4.0, # 4 ~ 5
+        -4.8, # 5 ~ 6
+        -4 # 6 ~ 7
+      ]
+      # shu yue xiao yue wang shang
+      OffestPitch: [
+        1.0, # 0 ~ 1
+        -0.5, # 1 ~ 2
+        -1.0, # 2 ~ 3
+        0, # 3 ~ 4
+        -1.0, # 4 ~ 5
+        0.8, # 5 ~ 6
+        0 # 6 ~ 7
+      ]
+    Outpost:
+      BulletPitch: 90.0
+      OffestYaw: [1.0, -1.45, 0.8,0]
+      OffestPitch: [1.0, 0.55, 1.0,0]
+  Light:
+    Splited: true
+    FilterMake: true
+    Area:
+      max: 999999
+      min: -1
+    Rate:
+      max: 0.4
+      min: 0.08
+    Angle:
+      max: 25
+      min: -1
+  Armor:
+    LengthRate:
+      max: 1
+      min: 0.80
+    Angle:
+      max: 25
+      min: -1
+    AngleMate:
+      max: 45
+      min: -1
+    Rate:
+      max: 1
+      min: 0.225
+    Area:
+      max: 999999
+      min: 600
+    Debug:
+      angle: false
+      angleMate: true
+      rate: false
+      lengthRate: false
+      area: false
+    Classify:
+      enable: true
+      #0 onnx 1 digit
+      mode: 1
+      minConfidence:
+        onxx: 40
+        digit: 50
+  Predict:
+    enable: false
+    #0 point 1 motion
+    mode: 1
+    # true - will update result by future point
+    updateResult: true
+    point:
+      armor:
+        VxRate: 1
+        VyRate: 1
+        dt: 0.12
+        # K: [0.976236,0.976236,0.96,1.12]
+      outpost:
+        # cosK = cos(15 / 360.0*3.1415926)
+        # v_rate = 0.976236 * cosK = 0.942986799
+        VxRate: 0.942986799
+        VyRate: 0.942986799
+        dt: 0.12
+        # K: [0.976236,0.976236,0.96,1.12]
+    motion:
+      armor:
+        maxTargetHeight: 1.2
+        maxMatchDistance: 0.2
+        maxMatchYawDiff: 0.5
+        trackingThres: 3
+        dt: 0.12
+        kalman:
+          rYaw: 0.005
+          rX: 0.0001
+      outpost:
+  ShowSrc: true
+
+  
+
+1:
+  CameraID: 1
+  ReceiveID: 1
+  SendId: 1
+  FireControl:
+    Armor:
+      BulletPitch: 75.0
+      # shu yue xiao yue wang you
+      OffestYaw: [
+        -4.0, # 0 ~ 1
+        -4.3, # 1 ~ 2
+        -4.5, # 2 ~ 3
+        -4, # 3 ~ 4
+        -4.0, # 4 ~ 5
+        -4.8, # 5 ~ 6
+        -4 # 6 ~ 7
+      ]
+      # shu yue xiao yue wang shang
+      OffestPitch: [
+        1.0, # 0 ~ 1
+        -0.5, # 1 ~ 2
+        -1.0, # 2 ~ 3
+        0, # 3 ~ 4
+        -1.0, # 4 ~ 5
+        0.8, # 5 ~ 6
+        0 # 6 ~ 7
+      ]
+    Outpost:
+      BulletPitch: 90.0
+      OffestYaw: [1.0, -1.45, 0.8,0]
+      OffestPitch: [1.0, 0.55, 1.0,0]
+  Light:
+    Splited: true
+    FilterMake: true
+    Area:
+      max: 999999
+      min: -1
+    Rate:
+      max: 0.4
+      min: 0.08
+    Angle:
+      max: 25
+      min: -1
+  Armor:
+    LengthRate:
+      max: 1
+      min: 0.80
+    Angle:
+      max: 25
+      min: -1
+    AngleMate:
+      max: 45
+      min: -1
+    Rate:
+      max: 1
+      min: 0.225
+    Area:
+      max: 999999
+      min: 600
+    Debug:
+      angle: false
+      angleMate: false
+      rate: false
+      lengthRate: false
+      area: false
+    Classify:
+      enable: true
+      #0 onnx 1 digit
+      mode: 1
+      minConfidence:
+        onxx: 40
+        digit: 50
+  Predict:
+    enable: true
+    #0 point 1 motion
+    mode: 1
+    # true - will update result by future point
+    updateResult: true
+    point:
+      armor:
+        VxRate: 1
+        VyRate: 1
+        dt: 0.12
+        # K: [0.976236,0.976236,0.96,1.12]
+      outpost:
+        # cosK = cos(15 / 360.0*3.1415926)
+        # v_rate = 0.976236 * cosK = 0.942986799
+        VxRate: 0.942986799
+        VyRate: 0.942986799
+        dt: 0.12
+        # K: [0.976236,0.976236,0.96,1.12]
+    motion:
+      armor:
+        maxTargetHeight: 1.2
+        maxMatchDistance: 0.2
+        maxMatchYawDiff: 0.5
+        trackingThres: 3
+        dt: 0.12
+        kalman:
+          rYaw: 0.005
+          rX: 0.0001
+      outpost:
+  ShowSrc: true

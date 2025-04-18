@@ -1,0 +1,21 @@
+RemainBullet: 450
+RemainTime: 270
+Hp: 200
+
+HomeHp: 100
+
+HomePoint:
+  x: 2.5
+  y: 5.5
+PatrolPointA:
+  x: 2.5
+  y: 5.5
+PatrolPointB:
+  x: 2.5
+  y: 5.5
+TargetDoorPoint:
+  x: 2.5
+  y: 5.5
+CenterPoint:
+  x: 2.5
+  y: 5.5

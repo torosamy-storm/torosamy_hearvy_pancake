@@ -1,0 +1,2 @@
+uint8 client_status
+uint8 server_status
