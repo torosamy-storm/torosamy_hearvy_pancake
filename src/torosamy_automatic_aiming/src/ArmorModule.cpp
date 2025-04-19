@@ -27,12 +27,14 @@ void ArmorModule::run() {
 
     		if(mShowSrc) {
                 drawParams(startTime);
+                imshow(id, mSrc);
             }else {
                 cv::Mat img(cv::Size(50, 20), CV_8UC3, cv::Scalar(0, 0, 0));
                 Torosamy::MessageUtils::putText(img, std::to_string(Torosamy::MessageUtils::getFpsByTimePoint(startTime)), cv::Point2f(0, 20));
+                imshow(id, img);
             }
 
-            imshow(id, mSrc);
+            
     		cv::waitKey(mCamera->getTimeOff());
 
         }catch(const std::runtime_error& e) {

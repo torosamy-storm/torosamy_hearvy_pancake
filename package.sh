@@ -16,7 +16,7 @@ cp -rf package.sh ./out
 rm -rf ./out/src/torosamy_automatic_aiming/build/*
 rm -rf ./out/src/torosamy_navigation/torosamy_navigation_client/build/*
 rm -rf ./out/src/torosamy_serial_port/build/*
-
+rm -rf ./out/src/torosamy_robomaster_sdk/resource/video/*
 
 
 cd out

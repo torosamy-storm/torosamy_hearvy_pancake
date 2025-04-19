@@ -5,24 +5,24 @@
 
 ArmorFilter::ArmorFilter(const YAML::Node& fileReader) :
     mConditionLightLengthRate(
-        fileReader["LengthRate"]["max"].as<float>(),
-        fileReader["LengthRate"]["min"].as<float>()
+        fileReader["LengthRate"]["max"].as<double>(),
+        fileReader["LengthRate"]["min"].as<double>()
     ),
     mConditionAngle(
-        fileReader["Angle"]["max"].as<float>(),
-        fileReader["Angle"]["min"].as<float>()
+        fileReader["Angle"]["max"].as<double>(),
+        fileReader["Angle"]["min"].as<double>()
     ),
     mConditionAngleMate(
-        fileReader["AngleMate"]["max"].as<float>(),
-        fileReader["AngleMate"]["min"].as<float>()
+        fileReader["AngleMate"]["max"].as<double>(),
+        fileReader["AngleMate"]["min"].as<double>()
     ),
     mConditionRate(
-        fileReader["Rate"]["max"].as<float>(),
-        fileReader["Rate"]["min"].as<float>()
+        fileReader["Rate"]["max"].as<double>(),
+        fileReader["Rate"]["min"].as<double>()
     ),
     mConditionArea(
-        fileReader["Area"]["max"].as<float>(),
-        fileReader["Area"]["min"].as<float>()
+        fileReader["Area"]["max"].as<double>(),
+        fileReader["Area"]["min"].as<double>()
     ){
 }
 

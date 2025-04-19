@@ -1,4 +1,4 @@
-BaudSpeed: 460800
+BaudSpeed: 115200
 Databits: 8
 Stopbits: 1
 Parity: 78
@@ -6,10 +6,10 @@ Parity: 78
 
 
 SendSetting:
-  Ids: [0]
+  Ids: [0,1,2]
   0:
-    Head: 0x7c
-    Tail: 0xc7
+    Head: 0x5a
+    Tail: 0xa5
   1:
     Head: 0x6b
     Tail: 0xb6
@@ -17,21 +17,21 @@ SendSetting:
     Head: 0x7c
     Tail: 0xc7
 ReceiveSetting:
-  Ids: [0]
+  Ids: [0,1,2]
   0:
-    Head: 0x7c
-    Tail: 0xc7
+    Head: 0x5a
+    Tail: 0xa5
     Check:
-      Head: false
-      Tail: false
-      Crc: false
+      Head: true
+      Tail: true
+      Crc: true
   1:
     Head: 0x6b
     Tail: 0xb6
     Check:
-      Head: false
-      Tail: false
-      Crc: false
+      Head: true
+      Tail: true
+      Crc: true
   2:
     Head: 0x7c
     Tail: 0xc7

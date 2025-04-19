@@ -3,7 +3,7 @@ Settings:
   #CameraIds: [114514, 31415926, 0, 7]
   CameraIds: [0,1]
   #串口编号
-  SerialPortIds: [0]
+  SerialPortIds: [0,1]
   CheckVersion:
     Enable: false
     # AutoUpdate: false TODO
