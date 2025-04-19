@@ -21,6 +21,11 @@ file(GLOB_RECURSE SERIAL_PORT_SOURCE_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
 )
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the build type (Debug or Release)." FORCE)
+endif()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 add_executable(${PROJECT_NAME} ${SERIAL_PORT_SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC

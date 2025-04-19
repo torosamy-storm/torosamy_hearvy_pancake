@@ -6,4 +6,4 @@ cd $bin_directory
 
 colcon build --packages-skip torosamy_navigation_client torosamy_serial_port torosamy_automatic_aiming --symlink-install --executor sequential
 
-# colcon build --packages-select livox_ros_driver2 --symlink-install --executor sequential
+# colcon build --packages-select torosamy_ros_msgs --symlink-install --executor sequential

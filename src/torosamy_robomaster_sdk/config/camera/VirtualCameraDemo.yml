@@ -18,4 +18,4 @@ Height: 720
 #视频读取休眠时间(ms)
 TimeOff: 1
 Debug: true
-SafeCloneMode: true
+SafeCloneMode: false

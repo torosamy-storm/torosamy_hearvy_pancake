@@ -1,6 +1,6 @@
 #include "packet/NavigationPacket.h"
 
-
+#include <iostream>
 NavigationPacket::NavigationPacket(const int& id):
     SendDataPacketInterface(id) {
     this->mSize = 14;

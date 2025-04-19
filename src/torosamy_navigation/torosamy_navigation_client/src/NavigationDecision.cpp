@@ -147,19 +147,15 @@ bool NavigationDecision::connectServer() {
 }
 
 
-bool tttt = false;
+
 void NavigationDecision::subscribeRefereeSystem(const RefereeSystemMsg::SharedPtr msg) {
-    if(!tttt) tttt = true;
-    else return;
+    if(!msg->game_start) return;
+
     
     mGoalMsg.pose.pose.position.x = 1.1405303478240967;
     mGoalMsg.pose.pose.position.y = -1.2488510608673096;
-
-
     mActionClient->async_send_goal(mGoalMsg, mSendGoalOptions);
 
-    // std::cout<<msg->game_start<<" "<<msg->mode<<std::endl;
-    // if(!msg->game_start) return;
     
     // if(msg->hp < mHomeHp) {
     //     goBase();

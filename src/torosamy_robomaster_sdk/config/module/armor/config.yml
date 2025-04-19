@@ -9,28 +9,45 @@ LoadIds: [0,1]
       BulletPitch: 75.0
       # shu yue xiao yue wang you
       OffestYaw: [
-        -4.0, # 0 ~ 1
-        -4.3, # 1 ~ 2
-        -4.5, # 2 ~ 3
-        -4, # 3 ~ 4
-        -4.0, # 4 ~ 5
+        0, # 0 ~ 1
+        1.0, # 1 ~ 2
+        0, # 2 ~ 3
+        0.0, # 3 ~ 4
+        0.0, # 4 ~ 5
         -4.8, # 5 ~ 6
         -4 # 6 ~ 7
       ]
       # shu yue xiao yue wang shang
       OffestPitch: [
         1.0, # 0 ~ 1
-        -0.5, # 1 ~ 2
-        -1.0, # 2 ~ 3
-        0, # 3 ~ 4
-        -1.0, # 4 ~ 5
+        1.0, # 1 ~ 2
+        1.0, # 2 ~ 3
+        1.0, # 3 ~ 4
+        1.1, # 4 ~ 5
         0.8, # 5 ~ 6
         0 # 6 ~ 7
       ]
     Outpost:
       BulletPitch: 90.0
-      OffestYaw: [1.0, -1.45, 0.8,0]
-      OffestPitch: [1.0, 0.55, 1.0,0]
+      OffestYaw: [
+        0, # 0 ~ 1
+        1.0, # 1 ~ 2
+        0, # 2 ~ 3
+        0.0, # 3 ~ 4
+        0.0, # 4 ~ 5
+        -4.8, # 5 ~ 6
+        -4 # 6 ~ 7
+      ]
+      # shu yue xiao yue wang shang
+      OffestPitch: [
+        1.0, # 0 ~ 1
+        1.0, # 1 ~ 2
+        1.0, # 2 ~ 3
+        1.0, # 3 ~ 4
+        1.1, # 4 ~ 5
+        0.8, # 5 ~ 6
+        0 # 6 ~ 7
+      ]
   Light:
     Splited: true
     FilterMake: true
@@ -73,9 +90,9 @@ LoadIds: [0,1]
         onxx: 40
         digit: 50
   Predict:
-    enable: false
+    enable: true
     #0 point 1 motion
-    mode: 1
+    mode: 0
     # true - will update result by future point
     updateResult: true
     point:
@@ -102,7 +119,7 @@ LoadIds: [0,1]
           rYaw: 0.005
           rX: 0.0001
       outpost:
-  ShowSrc: true
+  ShowSrc: false
 
   
 
@@ -115,28 +132,45 @@ LoadIds: [0,1]
       BulletPitch: 75.0
       # shu yue xiao yue wang you
       OffestYaw: [
-        -4.0, # 0 ~ 1
-        -4.3, # 1 ~ 2
-        -4.5, # 2 ~ 3
-        -4, # 3 ~ 4
+        0.0, #0 ~ 1
+        0.9 , # 1 ~ 2
+        1.0 , # 2 ~ 3
+        1.0, # 3 ~ 4
         -4.0, # 4 ~ 5
         -4.8, # 5 ~ 6
-        -4 # 6 ~ 7
+        0.0, # 6 ~ 7
       ]
       # shu yue xiao yue wang shang
       OffestPitch: [
         1.0, # 0 ~ 1
-        -0.5, # 1 ~ 2
-        -1.0, # 2 ~ 3
-        0, # 3 ~ 4
+        0.2 , # 1 ~ 2
+        0.0 , # 2 ~ 3
+        -0.5, # 3 ~ 4
         -1.0, # 4 ~ 5
         0.8, # 5 ~ 6
         0 # 6 ~ 7
       ]
     Outpost:
       BulletPitch: 90.0
-      OffestYaw: [1.0, -1.45, 0.8,0]
-      OffestPitch: [1.0, 0.55, 1.0,0]
+      OffestYaw: [
+        0, # 0 ~ 1
+        1.0, # 1 ~ 2
+        0, # 2 ~ 3
+        0.0, # 3 ~ 4
+        0.0, # 4 ~ 5
+        -4.8, # 5 ~ 6
+        -4 # 6 ~ 7
+      ]
+      # shu yue xiao yue wang shang
+      OffestPitch: [
+        1.0, # 0 ~ 1
+        1.0, # 1 ~ 2
+        1.0, # 2 ~ 3
+        1.0, # 3 ~ 4
+        1.1, # 4 ~ 5
+        0.8, # 5 ~ 6
+        0 # 6 ~ 7
+      ]
   Light:
     Splited: true
     FilterMake: true
@@ -181,9 +215,9 @@ LoadIds: [0,1]
   Predict:
     enable: true
     #0 point 1 motion
-    mode: 1
+    mode: 0
     # true - will update result by future point
-    updateResult: true
+    updateResult: false
     point:
       armor:
         VxRate: 1
@@ -208,4 +242,4 @@ LoadIds: [0,1]
           rYaw: 0.005
           rX: 0.0001
       outpost:
-  ShowSrc: true
+  ShowSrc: false

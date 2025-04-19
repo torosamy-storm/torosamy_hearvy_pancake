@@ -1,11 +1,3 @@
-src/camera/build
-src/author/build
-src/data/build
-src/module/build
-src/uart/build
-src/world/build
-example/build
-
 build/
 install/
 log/

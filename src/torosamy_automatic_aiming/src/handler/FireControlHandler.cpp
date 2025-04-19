@@ -13,19 +13,21 @@ float FireControlHandler::getYaw(const ArmorPnpResult& armor) const{
     const double x = armor.getPose().x() * 1000;
     const double z = armor.getPose().z() * 1000;
 
-    const float sendYaw = -atan(x / z) * 180 / CV_PI;
+    const float result = -atan(x / z) * 180 / CV_PI;
 
     const bool isArmorMode = armor.getArmorType() != ArmorType::OUTPOST;
     const std::vector<float>& offests = isArmorMode ? mYawOffestsArmor : mYawOffestsOutpost;
     const float distance = armor.getDistance();
 
-    if (distance < 1) return sendYaw + offests.at(0);
-    if (1 <= distance && distance < 2) return sendYaw + offests.at(1);
-    if (2 <= distance && distance < 3) return sendYaw + offests.at(2);
-    if (3 <= distance && distance < 4) return sendYaw + offests.at(3);
+    if (0 <= distance && distance < 1) return result + offests.at(0);
+    if (1 <= distance && distance < 2) return result + offests.at(1);
+    if (2 <= distance && distance < 3) return result + offests.at(2);
+    if (3 <= distance && distance < 4) return result + offests.at(3);
+    if (4 <= distance && distance < 5) return result + offests.at(4);
+    if (5 <= distance && distance < 6) return result + offests.at(5);
+    if (6 <= distance && distance < 7) return result + offests.at(6);
 
-
-    return sendYaw;
+    return result;
 }
 
 float FireControlHandler::getPitch(const ArmorPnpResult& armor){
@@ -35,18 +37,21 @@ float FireControlHandler::getPitch(const ArmorPnpResult& armor){
     const double z = armor.getPose().z() * 1000;
 
 
-    const float sendPitch = -computePitch(z / 1000, -(y-bulletPitch) / 1000) * 180 / CV_PI;
+    const float result = -computePitch(z / 1000, -(y-bulletPitch) / 1000) * 180 / CV_PI;
     // sendPitch = sendPitch * 180 / CV_PI;
 
 	const std::vector<float>& offests = isArmorMode ? mPitchOffestsArmor : mPitchOffestsOutpost;
     const float distance = armor.getDistance();
 
-    if (distance < 1) return sendPitch + offests.at(0);
-    if (1 <= distance && distance < 2) return sendPitch + offests.at(1);
-    if (2 <= distance && distance < 3) return sendPitch + offests.at(2);
-    if (3 <= distance && distance < 4) return sendPitch + offests.at(3);
+    if (0 <= distance && distance < 1) return result + offests.at(0);
+    if (1 <= distance && distance < 2) return result + offests.at(1);
+    if (2 <= distance && distance < 3) return result + offests.at(2);
+    if (3 <= distance && distance < 4) return result + offests.at(3);
+    if (4 <= distance && distance < 5) return result + offests.at(4);
+    if (5 <= distance && distance < 6) return result + offests.at(5);
+    if (6 <= distance && distance < 7) return result + offests.at(6);
 
-    return sendPitch;
+    return result;
 }
 
 

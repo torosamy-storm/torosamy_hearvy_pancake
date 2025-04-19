@@ -135,16 +135,25 @@ def start_mapping()->Node:
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
         parameters=[
-            os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'slam_toolbox.yaml')
+            os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'mapping.yaml')
         ],
     )
 
 def publish_robot_state()->Node:
     robot_description = Command([
         'xacro ', PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
-        ' xyz:="0.0 0.0372 0.48"', #   xyz: "\"0.0 0.0395 0.5074\""
-        ' rpy:="0.0 0.0 0.0"'
+        ' xyz:="0.0 0.0395 0.5074" rpy:="0.0 0.0 0.0"'
     ])
+
+    # launch_params = yaml.safe_load(open(os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'measurement.yaml')))
+    
+
+    # robot_description = Command([
+    #     'xacro ', PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
+    #     ' xyz:=', launch_params['base_link2livox_frame']['real']['xyz'], 
+    #     ' rpy:=', launch_params['base_link2livox_frame']['real']['rpy']
+    # ])
+
 
     return Node(
         package='robot_state_publisher',

@@ -16,9 +16,9 @@ ProjectionMatrix: [912.289368, 0.000000, 345.606483, 0.000000, 0.000000, 947.336
 Width: 720
 Height: 720
 #视频读取休眠时间(ms)
-TimeOff: 50
+TimeOff: 1
 Debug: true
-SafeCloneMode: true
+SafeCloneMode: false
 
 #文件名
 FileName: testVideo.mp4

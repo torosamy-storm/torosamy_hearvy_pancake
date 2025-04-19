@@ -1,5 +1,5 @@
 #!/bin/bash
-bin_directory=/home/nuc/WorkSpace/project/torosamy_little_pancake
+bin_directory=/home/torosamy/develop-work-space/project/torosamy_hearvy_pancake
 
 cd $bin_directory
 source install/setup.bash

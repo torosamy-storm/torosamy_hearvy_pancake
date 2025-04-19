@@ -27,14 +27,12 @@ void ArmorModule::run() {
 
     		if(mShowSrc) {
                 drawParams(startTime);
-                imshow(id, mSrc);
             }else {
                 cv::Mat img(cv::Size(50, 20), CV_8UC3, cv::Scalar(0, 0, 0));
                 Torosamy::MessageUtils::putText(img, std::to_string(Torosamy::MessageUtils::getFpsByTimePoint(startTime)), cv::Point2f(0, 20));
-                cv::imshow("fps_"+id, img);
             }
 
-
+            imshow(id, mSrc);
     		cv::waitKey(mCamera->getTimeOff());
 
         }catch(const std::runtime_error& e) {
@@ -255,7 +253,7 @@ bool ArmorModule::shouldFire() const{
     const float distance = mShootPublisher->mPacket.distance;
 
 
-    if (pitch >= 1.2) return false;
+    if (pitch >= 2.1) return false;
     if (yaw < 1.0 && pitch < 1.0) return true;
     return false;
 }

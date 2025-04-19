@@ -25,6 +25,11 @@ file(GLOB_RECURSE AUTOMATIC_AIMING_SOURCE_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
 )
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the build type (Debug or Release)." FORCE)
+endif()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 add_executable(${PROJECT_NAME} ${AUTOMATIC_AIMING_SOURCE_FILES})
 ament_target_dependencies(${PROJECT_NAME}  rclcpp)
 target_link_libraries(${PROJECT_NAME}

@@ -114,7 +114,7 @@ def localization_slam()->GroupAction:
                 executable='localization_slam_toolbox_node',
                 name='slam_toolbox',
                 parameters=[
-                    os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'slam_toolbox.yaml'),
+                    os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'localization.yaml'),
                     {
                         'use_sim_time': LaunchConfiguration('use_sim_time'),
                         'map_file_name': PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'), 'map']),
