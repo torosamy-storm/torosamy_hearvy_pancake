@@ -4,6 +4,9 @@ cd $bin_directory
 
 rm -rf out
 
+current_time=$(date +"%Y-%m-%d_%H-%M-%S")
+echo "${current_time}" > version.txt
+echo "${current_time}"
 
 ./scripts/build/build-navigation-server.sh
 

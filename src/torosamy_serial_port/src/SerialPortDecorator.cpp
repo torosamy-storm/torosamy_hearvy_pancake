@@ -49,6 +49,7 @@ void SerialPortDecorator::subscribeSendData0(const SendDataMsg& msg) const {
     std::shared_ptr<SendDataPacket> sendDataPacket = PacketManager::getInstance()->getSendPacketById<SendDataPacket>(0);
     sendDataPacket->pitch.f = msg.pitch;
     sendDataPacket->yaw.f = msg.yaw;
+    sendDataPacket->distance.f = msg.distance;
 
     sendDataPacket->isFindTarget.b = msg.is_find_target;
     sendDataPacket->startFire.b = msg.start_fire;
@@ -76,7 +77,7 @@ void SerialPortDecorator::subscribeSendData1(const SendDataMsg& msg) const {
     std::shared_ptr<SendDataPacket> sendDataPacket = PacketManager::getInstance()->getSendPacketById<SendDataPacket>(1);
     sendDataPacket->pitch.f = msg.pitch;
     sendDataPacket->yaw.f = msg.yaw;
-
+    sendDataPacket->distance.f = msg.distance;
     sendDataPacket->isFindTarget.b = msg.is_find_target;
     sendDataPacket->startFire.b = msg.start_fire;
     sendDataPacket->isTurnRight.b = msg.is_turn_right;

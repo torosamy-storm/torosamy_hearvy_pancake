@@ -16,24 +16,28 @@ void ArmorModule::run() {
     const std::string id = std::to_string(mId);
     while (mRunning) {
         try{
+            // if (mId == 1) continue;
             const TIME startTime = MessageUtils::getTimePoint();
-            mCamera->updateSrc();
-            mCamera->cloneSrc(mSrc);
 
-            if(mSrc.empty()) continue;
-            doOnce();
+
+            const bool doSuccessful = doOnce();
             mShootPublisher->publish();
 
+            // if (!doSuccessful) {
+            //     std::cout<<1<<std::endl;
 
-    		if(mShowSrc) {
-                drawParams(startTime);
-                imshow(id, mSrc);
+            // }else {
+
+            // }
+            // std::cout<<1<<std::endl;
+            if(mShowSrc) {
+                if(!mSrc.empty() && doSuccessful) drawParams(startTime);
+                if(!mSrc.empty() && doSuccessful) imshow(id, mSrc);
             }else {
                 cv::Mat img(cv::Size(50, 20), CV_8UC3, cv::Scalar(0, 0, 0));
                 Torosamy::MessageUtils::putText(img, std::to_string(Torosamy::MessageUtils::getFpsByTimePoint(startTime)), cv::Point2f(0, 20));
-                imshow(id, img);
+                if(!mSrc.empty()) imshow(id, img);
             }
-
             
     		cv::waitKey(mCamera->getTimeOff());
 
@@ -43,11 +47,27 @@ void ArmorModule::run() {
     }
 }
 
-void ArmorModule::doOnce() {
-    if(!findArmor()) return;
+bool ArmorModule::doOnce() {
+    const std::string id = std::to_string(mId);
+    if (!mCamera->updateSrc()) {
+        handlerLostTrack();
+        cv::destroyWindow(id);
+        return false;
+    }
+    if (!mCamera->cloneSrc(mSrc)) {
+        handlerLostTrack();
+        cv::destroyWindow(id);
+        return false;
+    }
+
+    
+    if(!findArmor())  {
+        handlerLostTrack();
+        return true;
+    }
     if(!mArmorManager.selectTarget()) {
     	handlerLostTrack();
-    	return;
+    	return true;
 	}
 
     const ArmorPnpResult& targetArmorPnpResult = getPnpResult();
@@ -61,6 +81,8 @@ void ArmorModule::doOnce() {
     mShootPublisher->mPacket.is_find_target = true;
     mShootPublisher->mPacket.distance = targetArmorPnpResult.getDistance();
     mShootPublisher->mPacket.start_fire = shouldFire();
+
+    return true;
 }
 
 
@@ -70,13 +92,17 @@ bool ArmorModule::findArmor() {
     	handlerLostTrack();
     	return false;
 	}
+    //mLightManager.drawLights(mSrc);
     
     if(!mArmorManager.findArmors(mLightManager.getLights())) {
+        mArmorManager.resetTargetArmorType();
         handlerLostTrack();
     	return false;
     }
+    // mArmorManager.drawArmors(mSrc);
     
     if (!mArmorManager.findArmors(mSrc)) {
+        mArmorManager.resetTargetArmorType();
         handlerLostTrack();
         return false;
     }
@@ -89,6 +115,12 @@ bool ArmorModule::findArmor() {
 
 ArmorPnpResult ArmorModule::getPnpResult() {
     const Armor& targetArmor = mArmorManager.getTargetArmor();
+
+    // if (targetArmor.getArmorType() != ArmorType::OUTPOST) {
+    //     // std::cout << static_cast<int>(targetArmor.getArmorType()) <<std::endl;
+    // }
+
+    
     const ArmorPnpResult& armor_pnp_result = ArmorPnpResult(
         mCamera->getCameraMatrix(),
         mCamera->getDistCoeffs(),
@@ -223,29 +255,7 @@ ArmorModule::ArmorModule(const int& id) :
     mShowSrc = fileReader["ShowSrc"].as<bool>();
     mCamera = Torosamy::CameraManager::getInstance()->getCameraById<Torosamy::MindCamera>(fileReader["CameraID"].as<int>());
 }
-// bool ArmorModule::isTurnRight() const {
-    // const PredictMode mode = mPredictHandler.getMode();
 
-    // if (PredictMode::MOTION == mode) return mPredictHandler.mMotionPredicter.isTurnRight();
-
-
-    // mPredictHandler.getPointPredicter().
-
-    //     if(mLastWorldCenterX == 0) {return false;}
-//     // std::cout<<"mlast:"<<mLastWorldCenterX<<std::endl;
-//     // std::cout<<"nowX:"<<nowX<<std::endl;
-
-//     // const double dx = fabs(nowX - mLastWorldCenterX);
-//     const double dx = nowX - mLastWorldCenterX;
-
-//     if (fabs(dx) > 1) return false;//ci ke wei huan ban
-//     if(nowX > mLastWorldCenterX||0<dx<0.5) {return true;}
-
-//     // if(dx < 0 && fabs(dx)<1) {return false;}
-    
-
-//     return false;
-// }
 
 bool ArmorModule::shouldFire() const{
     if (!mShootPublisher->mPacket.is_find_target) return false;
@@ -254,10 +264,7 @@ bool ArmorModule::shouldFire() const{
     const float pitch = fabs(mShootPublisher->mPacket.pitch);
     const float distance = mShootPublisher->mPacket.distance;
 
-
-    if (pitch >= 2.1) return false;
-    if (yaw < 1.0 && pitch < 1.0) return true;
-    return false;
+    return mFireControlHandler.shouldFire(distance, yaw, pitch);
 }
 
 

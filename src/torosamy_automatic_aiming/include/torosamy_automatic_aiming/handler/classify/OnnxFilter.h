@@ -11,7 +11,7 @@ class OnnxFilter {
 public:
 	  OnnxFilter(const Armor& armor,const cv::Mat& src);
     cv::Mat generateNumberMask() const;
-    std::pair<ArmorType, float> classify();
+    std::pair<ArmorType, float> classify(const double& minConfidence) const;
 private:
     const Armor mArmor;
     const cv::Mat mSrc;

@@ -8,7 +8,7 @@ public:
     Light() = default;
 
     void drawLight(cv::Mat& outSrc) const;
-    void drawLight(cv::Mat& outSrc, const bool& isFilterMode) const;
+    void drawLight(cv::Mat& outSrc, const bool& isFilterMode, const std::vector<bool>& debugOptions) const;
 
     Light& setArea(const float& area);
     Light& setAngle(const float& angle);

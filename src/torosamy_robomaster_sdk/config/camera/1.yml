@@ -19,13 +19,13 @@ Width: 720
 Height: 720
 #视频读取休眠时间(ms)
 TimeOff: 1
-Debug: true
+Debug: false
 SafeCloneMode: false
 
 #锐度
 Sharpness: 40
 #曝光时间 曝光越低，图像越暗，帧率越高12000 0008
-ExposureTime: 2000
+ExposureTime: 1000
 #曝光增益220
 ExposureValue: 160
 #相机增益

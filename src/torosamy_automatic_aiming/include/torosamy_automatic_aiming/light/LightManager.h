@@ -23,7 +23,7 @@ private:
     LightFilter mLightFilter;
 
     std::vector<Light> mLights;
-
+    std::vector<bool> mDebugOptions;
     cv::Mat getLightMask(const cv::Mat& src, const Torosamy::ColorType& colorType) const;
     cv::Mat getLightCompare(const cv::Mat& src, const Torosamy::ColorType& colorType) const;
     cv::Mat getLightSplit(const cv::Mat& src, const Torosamy::ColorType& colorType) const;

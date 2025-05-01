@@ -18,6 +18,7 @@ public:
     const Armor& getTargetArmor() const;
     void drawTarget(cv::Mat& outSrc) const;
     bool selectTarget();
+    void resetTargetArmorType();
 private:
     std::vector<Armor> mArmors;
     ArmorFilter mArmorFilter;

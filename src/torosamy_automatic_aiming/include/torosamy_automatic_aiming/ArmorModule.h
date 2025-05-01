@@ -27,7 +27,7 @@ class ArmorModule : public Torosamy::TorosamyModule{
 public:
     ArmorModule(const int& id);
     void run() override;
-    void doOnce();
+    bool doOnce();
     void enableShow();
     void disableShow();
     const std::shared_ptr<ShootSubscriber>& getSubscriber() const;

@@ -28,8 +28,8 @@ bool LightFilter::isLight(const Light& light) const{
 }
 
 bool LightFilter::checkAngle(const float& angle) const{
-    const float maxAngle = mConditionArea.first;
-    const float minAngle = mConditionArea.second;
+    const float maxAngle = mConditionAngle.first;
+    const float minAngle = mConditionAngle.second;
     return angle < maxAngle && angle > minAngle;
 }
 

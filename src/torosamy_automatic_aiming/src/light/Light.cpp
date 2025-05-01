@@ -6,13 +6,38 @@
 void Light::drawLight(cv::Mat& outSrc) const{
     for (int i = 0; i < 4; i++) Torosamy::MessageUtils::line(outSrc, this->mPoints.at(i), this->mPoints.at((i + 1) % 4));
 }
-
-void Light::drawLight(cv::Mat& outSrc, const bool& isFilterMode) const {
+// void drawArmor(cv::Mat& outSrc) const;
+// void drawArmor(cv::Mat& outSrc, const std::vector<bool>& debugOptions) const;
+void Light::drawLight(cv::Mat& outSrc, const bool& isFilterMode, const std::vector<bool>& debugOptions) const {
+    using namespace Torosamy;    
+    
     if(!isFilterMode) {
-        Torosamy::MessageUtils::line(outSrc, this->mTopPoint, this->mBottomPoint);
-        return;
+        MessageUtils::line(outSrc, this->mTopPoint, this->mBottomPoint);
+    }else {
+        for (int i = 0; i < 4; i++) MessageUtils::line(outSrc, this->mPoints.at(i), this->mPoints.at((i + 1) % 4));
     }
-    for (int i = 0; i < 4; i++) Torosamy::MessageUtils::line(outSrc, this->mPoints.at(i), this->mPoints.at((i + 1) % 4));
+    
+
+    
+    float x = mPoints.at(0).x + 50;
+    float y = mPoints.at(0).y;
+
+    if(debugOptions.at(0)) {
+        MessageUtils::putText(outSrc, "angle = " + std::to_string(mAngle), cv::Point2f(x, y));
+        y += 20;
+    }
+
+
+    if(debugOptions.at(1)) {
+        MessageUtils::putText(outSrc, "rate = " + std::to_string(mWidth / mLength), cv::Point2f(x, y));
+        y += 20;
+    }
+
+    if(debugOptions.at(2)) {
+        MessageUtils::putText(outSrc, "area = " + std::to_string(mArea), cv::Point2f(x, y));
+        y += 20;
+    }
+
 }
 Light& Light::setArea(const float& area) {
     this->mArea = area;

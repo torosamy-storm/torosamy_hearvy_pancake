@@ -22,11 +22,15 @@ DigitFilter::DigitFilter(const Armor& armor,const cv::Mat& src):
     mSrc(src){
 }
 
-std::pair<ArmorType, float> DigitFilter::classify(const float& minConfidence) const{
+std::pair<ArmorType, float> DigitFilter::classify(const std::vector<float>& minConfidences) const{
     const cv::Mat mask = generateNumberMask();
     cv::Mat resizedMask;
 
     cv::resize(mask, resizedMask, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
+
+    int resultType = 8;
+    double resultConfidence = 0;
+
 
     #pragma omp parallel for
     for(const auto& templatePair : mTemplates) {
@@ -40,10 +44,19 @@ std::pair<ArmorType, float> DigitFilter::classify(const float& minConfidence) co
         cv::minMaxLoc(result, nullptr, &confidence, nullptr, &classIdPoint);
         confidence *= 100;
 
-        if (confidence > minConfidence) return {static_cast<ArmorType>(digit), confidence};
+        if (confidence < minConfidences.at(digit)) continue;
+
+
+        if (resultConfidence < confidence) {
+            resultConfidence = confidence;
+            resultType = digit;
+            // std::cout << 1<< std::endl;
+        }
 
     }
-    return {ArmorType::NEGATIVE, 100};
+    // cv::imshow("roi",mask); 
+    // std::cout <<resultType <<std::endl;
+    return {static_cast<ArmorType>(resultType), resultConfidence};
 }
 
 

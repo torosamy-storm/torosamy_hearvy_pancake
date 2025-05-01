@@ -13,7 +13,7 @@ public:
     FireControlHandler(const YAML::Node& fileReader);
     float getPitch(const ArmorPnpResult& ArmorPnpResult);
     float getYaw(const ArmorPnpResult& ArmorPnpResult) const;
-
+    bool shouldFire(const double& distance, const double& yaw, const double& pitch) const;
     void updateFilghtTime(const float& depth, const float& pitch);
 
     float getFilghtTime() const;
@@ -28,8 +28,12 @@ private:
 
     const float mBulletPitchOutpost;
     std::vector<float> mPitchOffestsOutpost;
-
+    
     float mFilghtTime;
+
+    const float mMaxHeight;
+    const float mMaxFabPitch;
+    const float mMaxFabYaw;
 
     static const float V;  //28 30 弹速
     //用0.02510132乘当前空气密度

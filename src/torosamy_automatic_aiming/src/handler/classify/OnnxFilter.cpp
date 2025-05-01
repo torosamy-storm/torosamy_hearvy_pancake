@@ -14,7 +14,7 @@ OnnxFilter::OnnxFilter(const Armor& armor,const cv::Mat& src):
 }
 
 
-std::pair<ArmorType, float> OnnxFilter::classify() {
+std::pair<ArmorType, float> OnnxFilter::classify(const double& minConfidence) const{
     cv::Mat blob;
     // 输入图像进行处理
     const cv::Mat mask = generateNumberMask();
@@ -32,8 +32,11 @@ std::pair<ArmorType, float> OnnxFilter::classify() {
     double confidence;
     cv::Point classIdPoint;
     cv::minMaxLoc(softMaxProb.reshape(1, 1), nullptr, &confidence, nullptr, &classIdPoint);
-
-    return {static_cast<ArmorType>(classIdPoint.x), confidence * 100};
+    confidence *= 100;
+    
+    if (confidence < minConfidence) return {ArmorType::NEGATIVE, confidence};
+    
+    return {static_cast<ArmorType>(classIdPoint.x), confidence};
 }
 
 cv::Mat OnnxFilter::generateNumberMask() const{

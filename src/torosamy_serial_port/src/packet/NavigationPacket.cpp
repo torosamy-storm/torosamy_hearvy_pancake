@@ -19,8 +19,8 @@ void NavigationPacket::initData() {
 int NavigationPacket::writeData(unsigned char* dataArr,const int& startIndex) {
     int index = 0;
 
-    this->xSpeed.f = 0;
-    this->ySpeed.f = 0;
+    // this->xSpeed.f = 0;
+    // this->ySpeed.f = 0;
 
     dataArr[startIndex + index++] = this->xSpeed.c[0];
     dataArr[startIndex + index++] = this->xSpeed.c[1];

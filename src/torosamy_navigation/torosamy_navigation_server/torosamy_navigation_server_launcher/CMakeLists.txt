@@ -15,7 +15,7 @@ ament_auto_package(
   launch
   config
   maps
-  PCD
   urdf
+  PCD
 )
 

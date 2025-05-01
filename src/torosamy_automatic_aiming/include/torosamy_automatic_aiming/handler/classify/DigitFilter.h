@@ -10,7 +10,7 @@ class DigitFilter {
 public:
     DigitFilter(const Armor& armor,const cv::Mat& src);
     cv::Mat generateNumberMask() const;
-    std::pair<ArmorType, float> classify(const float& minConfidence) const;
+    std::pair<ArmorType, float> classify(const std::vector<float>& minConfidences) const;
 private:
     const Armor mArmor;
     const cv::Mat mSrc;

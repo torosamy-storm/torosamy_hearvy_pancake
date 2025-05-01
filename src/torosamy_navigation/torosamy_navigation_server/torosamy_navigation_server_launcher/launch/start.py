@@ -20,7 +20,7 @@ def generate_launch_description():
         DeclareLaunchArgument('mode',default_value='nav'),
         DeclareLaunchArgument('namespace',default_value=''),
         DeclareLaunchArgument('localization',default_value='slam'),
-        DeclareLaunchArgument('robot',default_value='polar_bear_robot_real'),
+        DeclareLaunchArgument('robot',default_value=''),
     ]
     for argument in arguments:
         ld.add_action(argument)
@@ -33,7 +33,7 @@ def generate_launch_description():
     ld.add_action(start_pointcloud_to_laserscan())
     ld.add_action(start_point_lio())
     ld.add_action(start_localization())
-    ld.add_action(start_mapping())
+    # ld.add_action(start_mapping())
     ld.add_action(start_navigation())
     ld.add_action(start_rviz())
 
@@ -91,7 +91,7 @@ def start_pointcloud_to_laserscan()->Node:
             'target_frame': 'livox_frame',
             'transform_tolerance': 0.01, #0.01
             'min_height': -1.0,
-            'max_height': 0.1,
+            'max_height': 1.0,
             'angle_min': -3.14159,  # -M_PI/2
             'angle_max': 3.14159,   # M_PI/2
             'angle_increment': 0.0043,  # M_PI/360.0
@@ -106,6 +106,14 @@ def start_pointcloud_to_laserscan()->Node:
 def start_point_lio()->GroupAction:
     return GroupAction(
         actions=[
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                arguments=[
+                    '--frame-id', 'map',
+                    '--child-frame-id', 'odom'
+                ],
+            ),
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
@@ -128,16 +136,16 @@ def start_point_lio()->GroupAction:
     )
 
 
-def start_mapping()->Node:
-    return Node(
-        condition = LaunchConfigurationEquals('mode', 'mapping'),
-        package='slam_toolbox',
-        executable='async_slam_toolbox_node',
-        name='slam_toolbox',
-        parameters=[
-            os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'mapping.yaml')
-        ],
-    )
+# def start_mapping()->Node:
+#     return Node(
+#         condition = LaunchConfigurationEquals('mode', 'mapping'),
+#         package='slam_toolbox',
+#         executable='async_slam_toolbox_node',
+#         name='slam_toolbox',
+#         parameters=[
+#             os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'mapping.yaml')
+#         ],
+#     )
 
 def publish_robot_state()->Node:
     robot_description = Command([

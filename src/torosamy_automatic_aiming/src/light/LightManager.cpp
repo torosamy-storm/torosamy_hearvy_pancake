@@ -6,6 +6,10 @@ LightManager::LightManager(const YAML::Node& fileReader) :
     mLightFilter(fileReader) {
     mSplitedMask = fileReader["Splited"].as<bool>();
     mFilterMake = fileReader["FilterMake"].as<bool>();
+
+    mDebugOptions.emplace_back(fileReader["Debug"]["angle"].as<bool>());
+    mDebugOptions.emplace_back(fileReader["Debug"]["rate"].as<bool>());
+    mDebugOptions.emplace_back(fileReader["Debug"]["area"].as<bool>());
 }
 
 
@@ -42,7 +46,7 @@ const std::vector<Light>& LightManager::getLights() const{
 
 void LightManager::drawLights(cv::Mat& outSrc) const {
     for (const Light& light : mLights) {
-        light.drawLight(outSrc, mFilterMake);
+        light.drawLight(outSrc, mFilterMake, mDebugOptions);
     }
 }
 

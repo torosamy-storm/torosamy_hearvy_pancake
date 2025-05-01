@@ -21,7 +21,7 @@ private:
     const ClassifyMode mClassifyMode;
     const bool mEnable;
     const float mOnnxMinConfidence;
-    const float mDigitMinConfidence;
+    std::vector<float> mDigitMinConfidences;
 };
 
 #endif //CLASSIFYHANDLER_H

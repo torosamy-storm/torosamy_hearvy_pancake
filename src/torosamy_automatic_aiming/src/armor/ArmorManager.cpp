@@ -66,14 +66,17 @@ bool ArmorManager::findArmors(const cv::Mat& src) {
     for (auto & armor : mArmors) {
 
         std::pair<ArmorType, float> classify = mClassifyHandler.classify(src, armor);
-
         const ArmorType type = classify.first;
         if (type == ArmorType::NEGATIVE) {
             continue;
         }
-
+        
         armor.setArmorType(type);
-        if (classify.second < mClassifyHandler.getMinConfidence()) continue;
+        // if(type == ArmorType::OUTPOST) std::cout <<"yes"<<std::endl;
+        // else std::cout<<"no"<<std::endl;
+        // if (classify.second < mClassifyHandler.getMinConfidence()) continue;
+
+        // std::cout <<static_cast<int>(type)<< "   "<<   classify.second <<std::endl;
         result.emplace_back(armor);
     }
     if (result.empty()) return false;
@@ -94,4 +97,9 @@ void ArmorManager::drawTarget(cv::Mat& outSrc) const {
 
 const Armor& ArmorManager::getTargetArmor() const{
     return mTargetArmor;
+}
+
+
+void ArmorManager::resetTargetArmorType() {
+    mTargetArmor.resetType();
 }

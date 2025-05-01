@@ -29,7 +29,7 @@ def generate_launch_description():
 
 
     ld.add_action(localization_slam())
-    ld.add_action(localzation_gicp())
+    # ld.add_action(localzation_gicp())
     return ld
 
 
@@ -109,18 +109,18 @@ def localization_slam()->GroupAction:
     return GroupAction(
         condition = LaunchConfigurationEquals('localization', 'slam'),
         actions=[
-            Node(
-                package='slam_toolbox',
-                executable='localization_slam_toolbox_node',
-                name='slam_toolbox',
-                parameters=[
-                    os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'localization.yaml'),
-                    {
-                        'use_sim_time': LaunchConfiguration('use_sim_time'),
-                        'map_file_name': PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'), 'map']),
-                    }
-                ],
-            ),
+            # Node(
+            #     package='slam_toolbox',
+            #     executable='localization_slam_toolbox_node',
+            #     name='slam_toolbox',
+            #     parameters=[
+            #         os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'localization.yaml'),
+            #         {
+            #             'use_sim_time': LaunchConfiguration('use_sim_time'),
+            #             'map_file_name': PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'), 'map']),
+            #         }
+            #     ],
+            # ),
             LoadComposableNodes(
                 target_container=container_name_full,
                 composable_node_descriptions=[

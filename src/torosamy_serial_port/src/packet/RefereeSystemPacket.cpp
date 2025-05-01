@@ -27,6 +27,9 @@ int RefereeSystemPacket::readData(const unsigned char* const dataArr,const int& 
     int index = 0;
     this->hp.c[0] = dataArr[startIndex + index++];
     this->hp.c[1] = dataArr[startIndex + index++];
+
+    // std::cout << this->hp.s<<std::endl;
+
     this->mode.c[0] = dataArr[startIndex + index++];
     this->mode.c[1] = dataArr[startIndex + index++];
     
