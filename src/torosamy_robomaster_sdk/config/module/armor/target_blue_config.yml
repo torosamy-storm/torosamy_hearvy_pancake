@@ -6,6 +6,7 @@ LoadIds: [0,1]
   SendId: 0
   ShowSrc: true
   Light:
+    DrawAll: false
     Splited: true
     FilterMake: true
     Area:
@@ -22,6 +23,7 @@ LoadIds: [0,1]
       rate: false
       area: false
   Armor:
+    DrawAll: false  
     LengthRate:
       max: 1
       min: -1
@@ -176,6 +178,7 @@ LoadIds: [0,1]
   SendId: 1
   ShowSrc: true
   Light:
+    DrawAll: false
     Splited: true
     FilterMake: true
     Area:
@@ -192,6 +195,7 @@ LoadIds: [0,1]
       rate: false
       area: false
   Armor:
+    DrawAll: false
     LengthRate:
       max: 1.2
       min: -1

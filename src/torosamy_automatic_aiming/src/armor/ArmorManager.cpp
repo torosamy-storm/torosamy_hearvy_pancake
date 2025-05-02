@@ -7,6 +7,7 @@
 
 ArmorManager::ArmorManager(const YAML::Node& fileReader) :
     mArmorFilter(fileReader),
+    mEnableDraw(fileReader["DrawAll"].as<bool>()),
     mClassifyHandler(fileReader["Classify"]) {
     mDebugOptions.emplace_back(fileReader["Debug"]["angle"].as<bool>());
     mDebugOptions.emplace_back(fileReader["Debug"]["angleMate"].as<bool>());
@@ -86,6 +87,7 @@ bool ArmorManager::findArmors(const cv::Mat& src) {
 
 
 void ArmorManager::drawArmors(cv::Mat& outSrc) const{
+    if (!mEnableDraw) return;
     for (const Armor& armor : mArmors) {
         armor.drawArmor(outSrc,mDebugOptions);
     }

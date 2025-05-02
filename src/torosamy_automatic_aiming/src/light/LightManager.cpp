@@ -3,6 +3,7 @@
 
 
 LightManager::LightManager(const YAML::Node& fileReader) :
+    mEnableDraw(fileReader["DrawAll"].as<bool>()),
     mLightFilter(fileReader) {
     mSplitedMask = fileReader["Splited"].as<bool>();
     mFilterMake = fileReader["FilterMake"].as<bool>();
@@ -45,6 +46,7 @@ const std::vector<Light>& LightManager::getLights() const{
 }
 
 void LightManager::drawLights(cv::Mat& outSrc) const {
+    if (!mEnableDraw) return;
     for (const Light& light : mLights) {
         light.drawLight(outSrc, mFilterMake, mDebugOptions);
     }

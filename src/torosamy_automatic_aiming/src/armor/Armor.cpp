@@ -3,6 +3,10 @@
 //
 #include <torosamy_automatic_aiming/armor/Armor.h>
 #include "utils/MessageUtils.h"
+
+Armor::Armor(): mType(ArmorType::NEGATIVE)  {
+}
+
 Armor::Armor(const Light& light1, const Light& light2) :
     mType(ArmorType::NEGATIVE) {
     mLeftLight = light1.getCenter().x < light2.getCenter().x ? light1 : light2;

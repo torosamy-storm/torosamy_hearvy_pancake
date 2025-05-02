@@ -18,7 +18,7 @@ enum class ArmorType {
 
 class Armor {
 public:
-    Armor() = default;
+    Armor();
     Armor(const Light& light1, const Light& light2);
     void drawArmor(cv::Mat& outSrc) const;
     void drawArmor(cv::Mat& outSrc, const std::vector<bool>& debugOptions) const;

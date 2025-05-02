@@ -106,6 +106,7 @@ void SerialPortDecorator::publishRefereeSystem() {
 
 
     msg.hp = packet->hp.s;
+    // std::cout <<packet->hp.s<<msg.hp<<std::endl;
     msg.mode = packet->mode.s;
     msg.remain_time = packet->remain_time.s;
     msg.remain_exchange_times = packet->remain_exchange_times.s;

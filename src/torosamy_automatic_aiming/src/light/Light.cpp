@@ -18,7 +18,6 @@ void Light::drawLight(cv::Mat& outSrc, const bool& isFilterMode, const std::vect
     }
     
 
-    
     float x = mPoints.at(0).x + 50;
     float y = mPoints.at(0).y;
 

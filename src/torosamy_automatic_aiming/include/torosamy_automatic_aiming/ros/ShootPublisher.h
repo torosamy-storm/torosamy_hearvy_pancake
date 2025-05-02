@@ -11,6 +11,7 @@ class ShootPublisher : public rclcpp::Node {
 public:
     ShootPublisher(const int& id);
     void publish();
+    void initData();
     SendDataMsg mPacket;
 private:
     rclcpp::Publisher<SendDataMsg>::SharedPtr mPublisher;

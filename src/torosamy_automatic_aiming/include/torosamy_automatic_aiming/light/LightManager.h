@@ -21,7 +21,7 @@ private:
     bool mSplitedMask;
     bool mFilterMake;
     LightFilter mLightFilter;
-
+    const bool mEnableDraw;
     std::vector<Light> mLights;
     std::vector<bool> mDebugOptions;
     cv::Mat getLightMask(const cv::Mat& src, const Torosamy::ColorType& colorType) const;

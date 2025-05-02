@@ -9,6 +9,15 @@ ShootPublisher::ShootPublisher(const int& id) :
 
 }
 
+void ShootPublisher::initData() {
+    mPacket.yaw = 0.0f;
+    mPacket.pitch = 0.0f;
+    mPacket.distance = 0.0f;
+    mPacket.is_find_target = false;
+    mPacket.start_fire = false;
+    mPacket.is_turn_right = false;
+}
+
 void ShootPublisher::publish() {
     mPublisher->publish(this->mPacket);
 }

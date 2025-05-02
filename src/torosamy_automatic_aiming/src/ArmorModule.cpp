@@ -14,25 +14,26 @@ std::vector<int> ArmorModule::mIds;
 void ArmorModule::run() {
     using namespace Torosamy;
     const std::string id = std::to_string(mId);
+    // int num = 0;
     while (mRunning) {
         try{
-            // if (mId == 1) continue;
             const TIME startTime = MessageUtils::getTimePoint();
-
-
+  
+            if (!mCamera->updateSrc()) {
+                std::cout <<"fail to update src, module id: "<<mId<<". now destroy the thread and clear data."<<std::endl;
+                mShootPublisher->initData();
+                mShootPublisher->publish();
+                cv::destroyWindow(id);
+                break;
+            }
+            
             const bool doSuccessful = doOnce();
             mShootPublisher->publish();
 
-            // if (!doSuccessful) {
-            //     std::cout<<1<<std::endl;
-
-            // }else {
-
-            // }
-            // std::cout<<1<<std::endl;
+            // std::cout << num ++ <<std::endl;
             if(mShowSrc) {
-                if(!mSrc.empty() && doSuccessful) drawParams(startTime);
-                if(!mSrc.empty() && doSuccessful) imshow(id, mSrc);
+                if(!mSrc.empty()) drawParams(startTime);
+                if(!mSrc.empty()) imshow(id, mSrc);
             }else {
                 cv::Mat img(cv::Size(50, 20), CV_8UC3, cv::Scalar(0, 0, 0));
                 Torosamy::MessageUtils::putText(img, std::to_string(Torosamy::MessageUtils::getFpsByTimePoint(startTime)), cv::Point2f(0, 20));
@@ -48,26 +49,17 @@ void ArmorModule::run() {
 }
 
 bool ArmorModule::doOnce() {
-    const std::string id = std::to_string(mId);
-    if (!mCamera->updateSrc()) {
-        handlerLostTrack();
-        cv::destroyWindow(id);
-        return false;
-    }
     if (!mCamera->cloneSrc(mSrc)) {
         handlerLostTrack();
-        cv::destroyWindow(id);
         return false;
-    }
-
-    
+    }    
     if(!findArmor())  {
         handlerLostTrack();
-        return true;
+        return false;
     }
     if(!mArmorManager.selectTarget()) {
     	handlerLostTrack();
-    	return true;
+    	return false;
 	}
 
     const ArmorPnpResult& targetArmorPnpResult = getPnpResult();
@@ -92,14 +84,14 @@ bool ArmorModule::findArmor() {
     	handlerLostTrack();
     	return false;
 	}
-    //mLightManager.drawLights(mSrc);
+    mLightManager.drawLights(mSrc);
     
     if(!mArmorManager.findArmors(mLightManager.getLights())) {
         mArmorManager.resetTargetArmorType();
         handlerLostTrack();
     	return false;
     }
-    // mArmorManager.drawArmors(mSrc);
+    mArmorManager.drawArmors(mSrc);
     
     if (!mArmorManager.findArmors(mSrc)) {
         mArmorManager.resetTargetArmorType();
@@ -201,12 +193,7 @@ ArmorPnpResult ArmorModule::getPnpResult() {
 bool ArmorModule::handlerLostTrack() {
   	mLostFrameHandler.lostTrack();
     if (mLostFrameHandler.isLostFrame()) {
-        mShootPublisher->mPacket.yaw = 0.0f;
-        mShootPublisher->mPacket.pitch = 0.0f;
-        mShootPublisher->mPacket.distance = 0.0f;
-        mShootPublisher->mPacket.is_find_target = false;
-        mShootPublisher->mPacket.start_fire = false;
-        mShootPublisher->mPacket.is_turn_right = false;
+        mShootPublisher->initData();
         return true;
     }
     return false;
@@ -217,8 +204,9 @@ bool ArmorModule::handlerLostTrack() {
 
 std::vector<std::shared_ptr<Torosamy::TorosamyModule>> ArmorModule::makeModules() {
     std::vector<std::shared_ptr<Torosamy::TorosamyModule>> result;
-
-    const YAML::Node fileReader = YAML::LoadFile(Torosamy::TorosamyModule::getConfigLocation("armor")+"config.yml");
+    const std::string configName = Torosamy::targetColor == Torosamy::ColorType::RED ? "target_red_config.yml" : "target_blue_config.yml";
+    
+    const YAML::Node fileReader = YAML::LoadFile(Torosamy::TorosamyModule::getConfigLocation("armor")+configName);
 
     std::vector<int> ids;
     for(const auto& idNode : fileReader["LoadIds"]) {
@@ -252,6 +240,10 @@ ArmorModule::ArmorModule(const int& id) :
 	std::string stringId = std::to_string(id);
     const YAML::Node fileReader = getConfigNode(id);
 
+    const std::string configName = Torosamy::targetColor == Torosamy::ColorType::RED ? "target_red_config.yml" : "target_blue_config.yml";
+
+    std::cout <<"module id: "<<id<< ", read config: "<<configName <<std::endl;
+
     mShowSrc = fileReader["ShowSrc"].as<bool>();
     mCamera = Torosamy::CameraManager::getInstance()->getCameraById<Torosamy::MindCamera>(fileReader["CameraID"].as<int>());
 }
@@ -271,7 +263,7 @@ bool ArmorModule::shouldFire() const{
 void ArmorModule::drawParams(const Torosamy::TIME& startTime) {
     using namespace Torosamy;
 
-    std::string params[9] = {
+    std::string params[10] = {
         "pitch:" + std::to_string(mShootPublisher->mPacket.pitch),
         "yaw:" + std::to_string(mShootPublisher->mPacket.yaw),
         "distance:" + std::to_string(mShootPublisher->mPacket.distance),
@@ -280,11 +272,12 @@ void ArmorModule::drawParams(const Torosamy::TIME& startTime) {
         "gain_yaw:" + std::to_string(mShootSubscriber->mPacket.yaw),
         "gain_pitch:" + std::to_string(mShootSubscriber->mPacket.pitch),
         "turn_right:" + std::to_string(mShootPublisher->mPacket.is_turn_right),
+        "target_type:" + std::to_string(static_cast<int>(mArmorManager.getTargetArmor().getArmorType())),
         "fps:" + std::to_string(MessageUtils::getFpsByTimePoint(startTime))
     };
 
 
-    for(int i = 0;i<9;i++) {
+    for(int i = 0;i<10;i++) {
         MessageUtils::putText(mSrc, params[i], cv::Point(0, (i + 1) * 20));
     }
 
@@ -306,7 +299,11 @@ std::vector<int> ArmorModule::getIds() {
 }
 
 YAML::Node ArmorModule::getConfigNode(const int& id) {
-    return YAML::LoadFile(getConfigLocation("armor")+ "config.yml")[std::to_string(id)];
+    const std::string configName = Torosamy::targetColor == Torosamy::ColorType::RED ? "target_red_config.yml" : "target_blue_config.yml";
+
+    // std::cout <<"module id: "<<id<< ", read config: target_red_config.yml"<<std::endl;
+
+    return YAML::LoadFile(getConfigLocation("armor")+ configName)[std::to_string(id)];
 }
 
 void ArmorModule::enableShow() {
