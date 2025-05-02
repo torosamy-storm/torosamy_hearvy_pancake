@@ -1,9 +1,11 @@
 import os
+import yaml
 from ament_index_python.packages import get_package_share_directory
 
+from launch_ros.descriptions import ComposableNode
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, GroupAction, EmitEvent, RegisterEventHandler
-from launch_ros.actions import Node
+from launch_ros.actions import Node, LoadComposableNodes
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command
 from launch.conditions import LaunchConfigurationEquals,IfCondition
@@ -18,9 +20,8 @@ def generate_launch_description():
         DeclareLaunchArgument('use_sim_time',default_value='False'),
         DeclareLaunchArgument('map',default_value='base'),
         DeclareLaunchArgument('mode',default_value='nav'),
-        DeclareLaunchArgument('namespace',default_value=''),
         DeclareLaunchArgument('localization',default_value='slam'),
-        DeclareLaunchArgument('robot',default_value=''),
+        DeclareLaunchArgument('robot',default_value='')
     ]
     for argument in arguments:
         ld.add_action(argument)
@@ -28,12 +29,12 @@ def generate_launch_description():
 
 
     ld.add_action(publish_robot_state())
+    ld.add_action(start_map_server())
     ld.add_action(start_livox_ros_driver2())
     ld.add_action(start_linefit_ground_segmentation())
     ld.add_action(start_pointcloud_to_laserscan())
     ld.add_action(start_point_lio())
     ld.add_action(start_localization())
-    # ld.add_action(start_mapping())
     ld.add_action(start_navigation())
     ld.add_action(start_rviz())
 
@@ -43,8 +44,7 @@ def start_navigation()->IncludeLaunchDescription:
     return IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(torosamy_navigation_server_launcher_dir,'launch', 'start_navigation.py')),
         launch_arguments={
-            'map': LaunchConfiguration('map'),
-            'namespace': LaunchConfiguration('namespace')
+            'map': LaunchConfiguration('map')
         }.items()
     )
 
@@ -129,38 +129,22 @@ def start_point_lio()->GroupAction:
                 output='screen',
                 remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
                 parameters=[
-                    os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'mid360.yaml')
+                    os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'point_lio.yaml')
                 ],
             )
         ]
     )
 
 
-# def start_mapping()->Node:
-#     return Node(
-#         condition = LaunchConfigurationEquals('mode', 'mapping'),
-#         package='slam_toolbox',
-#         executable='async_slam_toolbox_node',
-#         name='slam_toolbox',
-#         parameters=[
-#             os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'mapping.yaml')
-#         ],
-#     )
-
 def publish_robot_state()->Node:
-    robot_description = Command([
-        'xacro ', PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
-        ' xyz:="0.0 0.0395 0.5074" rpy:="0.0 0.0 0.0"'
-    ])
-
-    # launch_params = yaml.safe_load(open(os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'measurement.yaml')))
+    launch_params = yaml.safe_load(open(os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'robot_pose.yaml')))
     
 
-    # robot_description = Command([
-    #     'xacro ', PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
-    #     ' xyz:=', launch_params['base_link2livox_frame']['real']['xyz'], 
-    #     ' rpy:=', launch_params['base_link2livox_frame']['real']['rpy']
-    # ])
+    robot_description = Command([
+        'xacro ', PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
+        ' xyz:=', launch_params['base_link2livox_frame']['xyz'], 
+        ' rpy:=', launch_params['base_link2livox_frame']['rpy']
+    ])
 
 
     return Node(
@@ -168,7 +152,7 @@ def publish_robot_state()->Node:
         executable='robot_state_publisher',
         name='robot_state_publisher',
         parameters=[{
-            'use_sim_time': LaunchConfiguration('use_sim_time'),
+            'use_sim_time': False,
             'robot_description': robot_description
         }],
         output='screen',
@@ -183,8 +167,7 @@ def start_livox_ros_driver2()-> Node:
         executable="livox_ros_driver2_node",
         name="livox_ros_driver2",
         output="screen",
-        parameters=[
-            {
+        parameters=[{
                 "xfer_format": 4,  # 0-PointCloud2Msg(PointXYZRTL), 1-LivoxCustomMsg, 2-PclPxyziMsg, 3-LivoxImuMsg, 4-AllMsg
                 "multi_topic": 0,  # 0-All LiDARs share the same topic, 1-One LiDAR one topic
                 "data_src": 0,  # 0-lidar, others-Invalid data src
@@ -194,8 +177,7 @@ def start_livox_ros_driver2()-> Node:
                 "lvx_file_path": "/home/livox/livox_test.lvx",
                 "cmdline_input_bd_code": "livox0000000001",
                 "user_config_path": os.path.join(torosamy_navigation_server_launcher_dir,'config', 'MID360.json'),
-            }
-        ],
+        }],
     )
 
 
@@ -208,4 +190,35 @@ def start_localization()->IncludeLaunchDescription:
             'map': LaunchConfiguration('map'),
             'localization': LaunchConfiguration('localization')
         }.items()
+    )
+
+def start_map_server()->GroupAction:
+    return GroupAction(
+        actions=[
+            LoadComposableNodes(
+                target_container=('', '/', 'nav2_container'),
+                composable_node_descriptions=[
+                    ComposableNode(
+                        package='nav2_map_server',
+                        plugin='nav2_map_server::MapServer',
+                        name='map_server',
+                        parameters=[{
+                            'use_sim_time': False,
+                            'yaml_filename': PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'),"map.yaml"])
+                        }],
+                        remappings=[('/tf', 'tf'),('/tf_static', 'tf_static')]),
+
+                    ComposableNode(
+                        package='nav2_lifecycle_manager',
+                        plugin='nav2_lifecycle_manager::LifecycleManager',
+                        name='lifecycle_manager_localization',
+                        parameters=[{
+                            'use_sim_time': False,
+                            'autostart': True,
+                            'node_names': ['map_server']
+                        }]
+                    )
+                ]
+            )
+        ]
     )

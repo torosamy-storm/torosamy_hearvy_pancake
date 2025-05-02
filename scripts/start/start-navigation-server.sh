@@ -1,11 +1,15 @@
-bin_directory=/home/torosamy/develop-work-space/project/torosamy_hearvy_pancake
+#!/bin/bash
+
+# gnome-terminal -- bash -c "/home/ubuntu/workspace/project/torosamy_hearvy_pancake/start-navigation-server.sh; bash"
+
+bin_directory=/home/ubuntu/workspace/project/torosamy_hearvy_pancake
 
 cd $bin_directory
 source install/setup.bash
 
 ros2 launch torosamy_navigation_server_launcher start.py \
-map:=base \
+map:=test \
 mode:=nav \
-robot:=torosamy_little_pancake \
-localization:=slam \
+robot:=torosamy_hearvy_pancake \
+localization:=null \
 rviz:=true \

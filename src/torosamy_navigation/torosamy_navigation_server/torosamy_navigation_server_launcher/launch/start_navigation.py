@@ -12,7 +12,7 @@ torosamy_navigation_server_launcher_dir = get_package_share_directory('torosamy_
 def generate_launch_description():
     ld = LaunchDescription()
     arguments = [
-        DeclareLaunchArgument('namespace'),
+        DeclareLaunchArgument('namespace',default_value=''),
         DeclareLaunchArgument('use_slam',default_value='True'),
         DeclareLaunchArgument('map'),
         DeclareLaunchArgument('use_sim_time',default_value='False'),
