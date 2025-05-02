@@ -1,6 +1,6 @@
 small_gicp_relocalization:
   ros__parameters:
-    use_sim_time: True
+    use_sim_time: False
     num_threads: 4
     num_neighbors: 10
     global_leaf_size: 0.25

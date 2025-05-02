@@ -12,14 +12,12 @@ from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
 
-torosamy_navigation_server_launcher_dir = get_package_share_directory('torosamy_navigation_server_launcher')
+torosamy_navigation_map_builder_dir = get_package_share_directory('torosamy_navigation_map_builder')
 def generate_launch_description():
     ld = LaunchDescription()
     arguments = [
         DeclareLaunchArgument('rviz',default_value='True'),
         DeclareLaunchArgument('use_sim_time',default_value='False'),
-        DeclareLaunchArgument('map',default_value='base'),
-        DeclareLaunchArgument('localization',default_value='slam'),
         DeclareLaunchArgument('robot',default_value='')
     ]
     for argument in arguments:
@@ -28,31 +26,19 @@ def generate_launch_description():
 
 
     ld.add_action(publish_robot_state())
-    ld.add_action(start_map_server())
     ld.add_action(start_livox_ros_driver2())
     ld.add_action(start_linefit_ground_segmentation())
     ld.add_action(start_pointcloud_to_laserscan())
     ld.add_action(start_point_lio())
-    ld.add_action(start_localization())
-    ld.add_action(start_navigation())
     ld.add_action(start_rviz())
 
     return ld
-
-def start_navigation()->IncludeLaunchDescription:
-    return IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(torosamy_navigation_server_launcher_dir,'launch', 'start_navigation.py')),
-        launch_arguments={
-            'map': LaunchConfiguration('map')
-        }.items()
-    )
-
 
 def start_rviz()->GroupAction:
     start_rviz_cmd = Node(
         package='rviz2',
         executable='rviz2',
-        arguments=['-d', os.path.join(get_package_share_directory('torosamy_navigation_server_launcher'), 'config', 'navigation.rviz')],
+        arguments=['-d', os.path.join(get_package_share_directory('torosamy_navigation_map_builder_dir'), 'config', 'pointlio.rviz')],
         output='screen'
     )
 
@@ -75,7 +61,7 @@ def start_linefit_ground_segmentation()->Node:
         executable='ground_segmentation_node',
         output='screen',
         parameters=[
-            os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'segmentation.yaml')
+            os.path.join(torosamy_navigation_map_builder_dir, 'config', 'segmentation.yaml')
         ]
     )
 def start_pointcloud_to_laserscan()->Node:
@@ -102,26 +88,45 @@ def start_pointcloud_to_laserscan()->Node:
         }],
         name='pointcloud_to_laserscan'
     )
-
-def start_point_lio()->Node:
-    return Node(
-        package='point_lio',
-        executable='pointlio_mapping',
-        name='laserMapping',
-        output='screen',
-        remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-        parameters=[
-            os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'point_lio.yaml')
-        ],
+def start_point_lio()->GroupAction:
+    return GroupAction(
+        actions=[
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                arguments=[
+                    '--frame-id', 'map',
+                    '--child-frame-id', 'odom'
+                ],
+            ),
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                arguments=[
+                    '--frame-id', 'odom',
+                    '--child-frame-id', 'lidar_odom'
+                ],
+            ),
+            Node(
+                package='point_lio',
+                executable='pointlio_mapping',
+                name='laserMapping',
+                output='screen',
+                remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+                parameters=[
+                    os.path.join(torosamy_navigation_map_builder_dir, 'config', 'point_lio.yaml')
+                ],
+            )
+        ]
     )
 
 
 def publish_robot_state()->Node:
-    launch_params = yaml.safe_load(open(os.path.join(torosamy_navigation_server_launcher_dir, 'config', 'robot_pose.yaml')))
+    launch_params = yaml.safe_load(open(os.path.join(torosamy_navigation_map_builder_dir, 'config', 'robot_pose.yaml')))
     
 
     robot_description = Command([
-        'xacro ', PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
+        'xacro ', PathJoinSubstitution([torosamy_navigation_map_builder_dir, 'urdf', LaunchConfiguration('robot'),"robot.urdf.xacro"]),
         ' xyz:=', launch_params['base_link2livox_frame']['xyz'], 
         ' rpy:=', launch_params['base_link2livox_frame']['rpy']
     ])
@@ -156,19 +161,8 @@ def start_livox_ros_driver2()-> Node:
                 "frame_id": "livox_frame",
                 "lvx_file_path": "/home/livox/livox_test.lvx",
                 "cmdline_input_bd_code": "livox0000000001",
-                "user_config_path": os.path.join(torosamy_navigation_server_launcher_dir,'config', 'MID360.json'),
+                "user_config_path": os.path.join(torosamy_navigation_map_builder_dir,'config', 'MID360.json'),
         }],
-    )
-
-
-def start_localization()->IncludeLaunchDescription:
-    return IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(torosamy_navigation_server_launcher_dir,'launch','start_localization.py')),
-        launch_arguments = {
-            'use_sim_time': LaunchConfiguration('use_sim_time'),
-            'map': LaunchConfiguration('map'),
-            'localization': LaunchConfiguration('localization')
-        }.items()
     )
 
 def start_map_server()->GroupAction:
@@ -183,7 +177,7 @@ def start_map_server()->GroupAction:
                         name='map_server',
                         parameters=[{
                             'use_sim_time': False,
-                            'yaml_filename': PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'),"map.yaml"])
+                            'yaml_filename': PathJoinSubstitution([torosamy_navigation_map_builder_dir, 'maps', LaunchConfiguration('map'),"map.yaml"])
                         }],
                         remappings=[('/tf', 'tf'),('/tf_static', 'tf_static')]),
 

@@ -9,7 +9,6 @@ source install/setup.bash
 
 ros2 launch torosamy_navigation_server_launcher start.py \
 map:=test \
-mode:=nav \
 robot:=torosamy_hearvy_pancake \
 localization:=null \
 rviz:=true \

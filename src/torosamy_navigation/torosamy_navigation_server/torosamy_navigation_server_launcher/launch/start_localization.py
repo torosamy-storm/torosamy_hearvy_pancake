@@ -1,12 +1,11 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, GroupAction
+from launch.actions import DeclareLaunchArgument
 from launch.conditions import LaunchConfigurationEquals
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import LoadComposableNodes,Node
-from launch_ros.descriptions import ComposableNode,ParameterFile
-from nav2_common.launch import RewrittenYaml
+from launch_ros.descriptions import ComposableNode
 from ament_index_python.packages import get_package_share_directory
 torosamy_navigation_server_launcher_dir = get_package_share_directory('torosamy_navigation_server_launcher')
 
@@ -26,9 +25,17 @@ def generate_launch_description():
     for arg in arguments:
         ld.add_action(arg)
 
-
+    ld.add_action(localzation_null())
     ld.add_action(localization_slam())
     # ld.add_action(localzation_gicp())
+    ld.add_action(Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=[
+            '--frame-id', 'odom',
+            '--child-frame-id', 'lidar_odom'
+        ]
+    ))
     return ld
 
 
@@ -48,7 +55,7 @@ def localzation_gicp()->LoadComposableNodes:
                 parameters=[{
                     #"prior_pcd_file": PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'PCD', LaunchConfiguration('map'),".pcd"])
                     "prior_pcd_file": "/home/torosamy/develop-work-space/project/TorosamyStorm/TorosamyStormNav/src/torosamy_navigation_server_launcher/PCD/RMUC.pcd",
-                    "use_sim_time": LaunchConfiguration('use_sim_time'),
+                    "use_sim_time": False,
                     "yaml_filename": PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'),"map.yaml"])  
                 }],
                 remappings=remappings,
@@ -69,5 +76,15 @@ def localization_slam()->Node:
                 'use_sim_time': LaunchConfiguration('use_sim_time'),
                 'map_file_name': PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'), 'map']),
             }
+        ]
+    )
+def localzation_null()->Node:
+    return Node(
+        condition = LaunchConfigurationEquals('localization', 'null'),
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=[
+            '--frame-id', 'map',
+            '--child-frame-id', 'odom'
         ]
     )

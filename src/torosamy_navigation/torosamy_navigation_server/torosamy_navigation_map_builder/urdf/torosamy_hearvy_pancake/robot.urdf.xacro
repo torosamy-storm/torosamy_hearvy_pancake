@@ -10,18 +10,18 @@
     <xacro:macro name="mid360_xacro">
         <link name="livox_frame">
         </link>
-<!-- 
+
         <joint name="livox_joint" type="fixed">
             <origin xyz="0.0372 0 0.659" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="livox_frame"/>
-        </joint> -->
+        </joint>
 
-        <joint name="livox_joint" type="fixed">
+        <!-- <joint name="livox_joint" type="fixed">
             <origin xyz="0.0 0.045 0.49" rpy="0 0 0"/>
             <parent link="base_link"/>
             <child link="livox_frame"/>
-        </joint>
+        </joint> -->
     </xacro:macro>
     
     
