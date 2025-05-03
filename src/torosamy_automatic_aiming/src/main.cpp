@@ -7,9 +7,15 @@
 int main(int argc, char* argv[]) {
     rclcpp::init(argc, argv);
     using namespace Torosamy;
+
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+
     CameraManager::getInstance()->openCameras();
     CameraManager::getInstance()->startUpdateCameras();
 
+    std::cout <<"allow to update camera src" <<std::endl;
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     ModuleManager::getInstance()
         ->addModules(ArmorModule::makeModules())
@@ -23,9 +29,9 @@ int main(int argc, char* argv[]) {
     }
 
     executor.spin();
-
-    CameraManager::getInstance()->stopCameras();
     ModuleManager::getInstance()->stopTasks();
+    CameraManager::getInstance()->stopCameras();
+    
 
 
     rclcpp::shutdown();

@@ -54,7 +54,7 @@ def localzation_gicp()->LoadComposableNodes:
                 name="small_gicp_relocalization",
                 parameters=[{
                     #"prior_pcd_file": PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'PCD', LaunchConfiguration('map'),".pcd"])
-                    "prior_pcd_file": "/home/torosamy/develop-work-space/project/TorosamyStorm/TorosamyStormNav/src/torosamy_navigation_server_launcher/PCD/RMUC.pcd",
+                    "prior_pcd_file": "/home/ubuntu/workspace/project/pcd2pgm/PCD/scans.pcd",
                     "use_sim_time": False,
                     "yaml_filename": PathJoinSubstitution([torosamy_navigation_server_launcher_dir, 'maps', LaunchConfiguration('map'),"map.yaml"])  
                 }],

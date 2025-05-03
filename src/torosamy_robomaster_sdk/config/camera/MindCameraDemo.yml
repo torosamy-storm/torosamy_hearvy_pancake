@@ -19,6 +19,8 @@ Height: 720
 TimeOff: 1
 Debug: true
 SafeCloneMode: false
+UsbPath: /dev/bus/usb/004/002
+BufferWaitTime: 1000
 
 #锐度
 Sharpness: 40

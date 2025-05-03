@@ -14,23 +14,46 @@ std::vector<int> ArmorModule::mIds;
 void ArmorModule::run() {
     using namespace Torosamy;
     const std::string id = std::to_string(mId);
-    // int num = 0;
+
+    const int maxTryTimes = 5;
+    for(int i = 0;i < maxTryTimes;i++) {
+        if(mCamera->opened()) break;
+
+        if(i == maxTryTimes - 1) {
+            std::cerr<<"the module: "<<mId<<" can not get opened camera, now break thread :("<<std::endl;
+            return;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
     while (mRunning) {
         try{
             const TIME startTime = MessageUtils::getTimePoint();
-  
+
             if (!mCamera->updateSrc()) {
-                std::cout <<"fail to update src, module id: "<<mId<<". now destroy the thread and clear data."<<std::endl;
                 mShootPublisher->initData();
                 mShootPublisher->publish();
-                cv::destroyWindow(id);
-                break;
+
+                for(int i = 0;i < maxTryTimes;i++) {
+                    if(mCamera->releaseCamera()) break;
+                    if(i == maxTryTimes - 1) {
+                        std::cerr<<"fail to release the module: "<<mId<<" camera, now break thread :("<<std::endl;
+                        return;
+                    }
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                }
+
+                if (!mCamera->openCamera()) {
+                    if(!mSrc.empty()) cv::destroyWindow(id);
+                    std::cerr<<"fail to restart camera and has been try to 5 times, now break thread :("<<std::endl;
+                    break;
+                }
             }
-            
+
             const bool doSuccessful = doOnce();
             mShootPublisher->publish();
 
-            // std::cout << num ++ <<std::endl;
+
             if(mShowSrc) {
                 if(!mSrc.empty()) drawParams(startTime);
                 if(!mSrc.empty()) imshow(id, mSrc);

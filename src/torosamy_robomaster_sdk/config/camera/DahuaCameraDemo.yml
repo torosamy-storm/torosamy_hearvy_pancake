@@ -22,7 +22,8 @@ Height: 768
 TimeOff: 1
 Debug: true
 SafeCloneMode: false
-
+UsbPath: /dev/bus/usb/004/002
+BufferWaitTime: 1000
 
 #曝光时间
 Exposure: 3000

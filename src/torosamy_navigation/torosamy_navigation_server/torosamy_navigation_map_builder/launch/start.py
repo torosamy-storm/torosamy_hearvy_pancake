@@ -18,6 +18,8 @@ def generate_launch_description():
     arguments = [
         DeclareLaunchArgument('rviz',default_value='True'),
         DeclareLaunchArgument('use_sim_time',default_value='False'),
+        DeclareLaunchArgument('map',default_value='base'),
+        DeclareLaunchArgument('mode',default_value='nav'),
         DeclareLaunchArgument('robot',default_value='')
     ]
     for argument in arguments:
@@ -26,13 +28,24 @@ def generate_launch_description():
 
 
     ld.add_action(publish_robot_state())
+    ld.add_action(start_map_server())
     ld.add_action(start_livox_ros_driver2())
     ld.add_action(start_linefit_ground_segmentation())
     ld.add_action(start_pointcloud_to_laserscan())
     ld.add_action(start_point_lio())
+    ld.add_action(start_navigation())
     ld.add_action(start_rviz())
 
     return ld
+
+def start_navigation()->IncludeLaunchDescription:
+    return IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(torosamy_navigation_map_builder_dir,'launch', 'start_navigation.py')),
+        launch_arguments={
+            'map': LaunchConfiguration('map')
+        }.items()
+    )
+
 
 def start_rviz()->GroupAction:
     start_rviz_cmd = Node(

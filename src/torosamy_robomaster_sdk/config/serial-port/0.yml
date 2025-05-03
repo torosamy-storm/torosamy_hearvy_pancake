@@ -2,8 +2,8 @@ BaudSpeed: 115200
 Databits: 8
 Stopbits: 1
 Parity: 78
-
-
+UsbPath: /dev/bus/usb/003/003
+OpenById: true
 
 SendSetting:
   Ids: [0,1,2]
