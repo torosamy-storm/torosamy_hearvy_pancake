@@ -4,7 +4,7 @@ LoadIds: [0,1]
   CameraID: 0
   ReceiveID: 0
   SendId: 0
-  ShowSrc: true
+  ShowSrc: false
   Light:
     DrawAll: false
     Splited: true
@@ -105,8 +105,8 @@ LoadIds: [0,1]
         -2.8, # 1.85 ~ 2.35
         -2.5, # 2.35 ~ 2.85
         -0.5, # 2.85 ~ 3.35
-        -0.5, # 3.35 ~ 3.85
-        -2.3, # 3.85 ~ 4.35
+        0.0, # 3.35 ~ 3.85
+        0.0, # 3.85 ~ 4.35
         -2.6, # 4.35 ~ 4.85
         -2.8, # 4.85 ~ 5.35
         -2.8, # 5.35 ~ 5.85
@@ -123,8 +123,8 @@ LoadIds: [0,1]
         0.5, # 1.85 ~ 2.35
         0.5, # 2.35 ~ 2.85
         0.5, # 2.85 ~ 3.35
-        0.7, # 3.35 ~ 3.85
-        0.7, # 3.85 ~ 4.35
+        0.0, # 3.35 ~ 3.85
+        0.3, # 3.85 ~ 4.35
         0.8, # 4.35 ~ 4.85
         0.8, # 4.85 ~ 5.35
         0.8, # 5.35 ~ 5.85
@@ -176,7 +176,7 @@ LoadIds: [0,1]
   CameraID: 1
   ReceiveID: 1
   SendId: 1
-  ShowSrc: true
+  ShowSrc: false
   Light:
     DrawAll: false
     Splited: true

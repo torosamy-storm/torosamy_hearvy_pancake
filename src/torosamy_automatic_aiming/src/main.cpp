@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     rclcpp::init(argc, argv);
     using namespace Torosamy;
 
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     CameraManager::getInstance()->openCameras();
     CameraManager::getInstance()->startUpdateCameras();

@@ -7,13 +7,15 @@
 #include "module/TorosamyModule.h"
 #include <memory>
 #include <vector>
+#include <yaml-cpp/node/node.h>
 class HeartJumpModule : public Torosamy::TorosamyModule {
 public:
-    HeartJumpModule(const int& id);
+    HeartJumpModule(const YAML::Node& fileReader);
     void run() override;
 
     static std::shared_ptr<Torosamy::TorosamyModule> makeModule();
 private:
+    const int mTimeOff;
     int mConnectCounter;
     short mLastHeartJumpNum;
 };

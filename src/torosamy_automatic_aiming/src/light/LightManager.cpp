@@ -38,6 +38,7 @@ bool LightManager::findLights(const cv::Mat& src, const Torosamy::ColorType& col
 
 
     if (!mLights.empty()) return true;
+    
     return false;
 }
 

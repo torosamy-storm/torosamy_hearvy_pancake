@@ -22,6 +22,7 @@ public:
     bool2uchar isFindTarget;
     bool2uchar startFire;
     bool2uchar isTurnRight;
+
 };
 
 

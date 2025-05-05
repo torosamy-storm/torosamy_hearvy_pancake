@@ -1,15 +1,35 @@
 RemainBullet: 450
 RemainTime: 270
 Hp: 200
+HomeHp: 200
+TimeOff: 1
 
-HomeHp: 100
+ConnectMaxTimes: 5
+ConnectWaitOnceSecond: 5
+
+
+Debug:
+  enable: true
+  hp: true
+  mode: true
+  remain_time: true
+  remain_exchange_times: true
+  remain_bullet: true
+  damage_reduction: true
+  is_our_outpost_break: true
+  is_enemy_outpost_break: true
+  game_start: true
+  is_fort_occupy: true
+
+
+
 
 HomePoint:
-  x: 2.5
-  y: 5.5
+  x: 0.3003413677215576
+  y: 0.05908632278442383
 PatrolPointA:
-  x: 2.5
-  y: 5.5
+  x: 5.000386714935303
+  y: 2.4382035732269287
 PatrolPointB:
   x: 2.5
   y: 5.5

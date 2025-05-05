@@ -1,6 +1,9 @@
 #include "packet/NavigationPacket.h"
-
+#include <yaml-cpp/yaml.h>
 #include <iostream>
+
+bool NavigationPacket::enablePrintSpeed = YAML::LoadFile("/opt/torosamy_robomaster_sdk/config/module/uart/config.yml")["Debug"]["Speed"].as<bool>();
+
 NavigationPacket::NavigationPacket(const int& id):
     SendDataPacketInterface(id) {
     this->mSize = 14;
@@ -42,6 +45,10 @@ int NavigationPacket::writeData(unsigned char* dataArr,const int& startIndex) {
 
     dataArr[startIndex + index++] = this->clientStatus.c[0];
     dataArr[startIndex + index] = this->clientStatus.c[1];
+
+    
+    if(enablePrintSpeed) std::cout << "x: " <<this->xSpeed.f << " y: " << this->ySpeed.f <<std::endl;
+
     return mSize;
 }
 

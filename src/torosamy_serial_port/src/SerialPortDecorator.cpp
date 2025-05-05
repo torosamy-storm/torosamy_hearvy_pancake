@@ -4,6 +4,7 @@
 #include "packet/NavigationPacket.h"
 #include "packet/RefereeSystemPacket.h"
 #include "pod/manager/PacketManager.h"
+
 using namespace Torosamy;
 SerialPortDecorator::SerialPortDecorator() : Node("serial_port_node") {
     //0 shoot

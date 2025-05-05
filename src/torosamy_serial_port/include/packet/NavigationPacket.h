@@ -20,6 +20,8 @@ public:
     short2uchar heartJumpNum;
     short2uchar serverStatus;
     short2uchar clientStatus;
+
+    static bool enablePrintSpeed;
 };
 
 

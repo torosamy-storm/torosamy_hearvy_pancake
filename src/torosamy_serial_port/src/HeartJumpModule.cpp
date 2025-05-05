@@ -8,9 +8,10 @@
 #include "yaml-cpp/yaml.h"
 
 
-HeartJumpModule::HeartJumpModule(const int& id) :
-    Torosamy::TorosamyModule(id),
+HeartJumpModule::HeartJumpModule(const YAML::Node& fileReader) :
+    Torosamy::TorosamyModule(fileReader["Id"].as<int>()),
     mLastHeartJumpNum(-1),
+    mTimeOff(fileReader["TimeOff"].as<int>()),
     mConnectCounter(0){
     // const YAML::Node fileReader = YAML::LoadFile(getConfigLocation("heart_jump")+ "config.yml");
     // mReceivePacketId = fileReader["ReceivePacketId"].as<int>();
@@ -36,12 +37,10 @@ void HeartJumpModule::run() {
             std::cout << "reload serial port successfully"<< std::endl;
         }
         mLastHeartJumpNum = newNumber;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(mTimeOff));
     }
 }
 
 std::shared_ptr<Torosamy::TorosamyModule> HeartJumpModule::makeModule() {
-    const YAML::Node fileReader = YAML::LoadFile(getConfigLocation("heart_jump")+ "config.yml");
-
-    return std::make_shared<HeartJumpModule>(fileReader["Id"].as<int>());
+    return std::make_shared<HeartJumpModule>(YAML::LoadFile(getConfigLocation("uart")+ "config.yml")["HeartJump"]);
 }

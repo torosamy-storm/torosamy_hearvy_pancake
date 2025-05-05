@@ -6,9 +6,6 @@
 
 #include "torosamy_ros_msgs/msg/navigation_client.hpp"
 #include "torosamy_ros_msgs/msg/referee_system_msg.hpp"
-using torosamy_ros_msgs::msg::RefereeSystemMsg;
-using torosamy_ros_msgs::msg::NavigationClient;
-using NavigationServer = nav2_msgs::action::NavigateToPose;
 
 
 enum class ClientStatus {
@@ -24,55 +21,55 @@ enum class ServerStatus {
     RUN_ERROR,
 };
 
-
-class NavigationDecision : public rclcpp::Node {
-public:
-  using NavigationServerClient = rclcpp_action::Client<NavigationServer>;
-  using NavigationServerGoalHandle = rclcpp_action::ClientGoalHandle<NavigationServer>;
-  
-
-  bool connectServer(); 
-  void subscribeRefereeSystem(const RefereeSystemMsg::SharedPtr msg);
-
-
-  NavigationDecision();
-  // void setServerStatus(const ServerStatus& status);
-  // void setClientStatus(const ClientStatus& status);
-private:
-  // static std::pair<float,float> transitionPoints = {-0.04243, -4.17162};
-  // static bool isTransited;
-  // void sendPoint(const float& x, const float& y);
-
-  void goBase();
-  void goCenter();
-  void goTarget();
-
-  void initPoints();
-  void initSendGoalOptions();
-  void initGoalMsg();
-  void initDecisionValue();
-
-
+struct NavigationDecisionConfig {
   short mHomeHp;
   short mRemainBullet;
   short mRemainTime;
   short mHp;
+  short mTimeOff;
+  short mConnectMaxTimes;
+  short mConnectWaitOnceSecond;
+  bool mEnableDebug;
 
   std::pair<float,float> mHomePoint;
   std::pair<float,float> mPatrolPointA;
   std::pair<float,float> mPatrolPointB;
   std::pair<float,float> mTargetDoorPoint;
   std::pair<float,float> mCenterPoint;
-  
-  NavigationServerClient::SharedPtr mActionClient;
-  NavigationServer::Goal mGoalMsg;
-  rclcpp_action::Client<NavigationServer>::SendGoalOptions mSendGoalOptions;
-  
-  ClientStatus mClientStatus;
-  ServerStatus mServerStatus;
+
+
+  std::vector<bool> mDebugOption;
+};
+
+using torosamy_ros_msgs::msg::RefereeSystemMsg;
+using NavigationDecisionStatus = torosamy_ros_msgs::msg::NavigationClient;
+class NavigationDecision : public rclcpp::Node {
+public:
+  NavigationDecision();
+  bool connectServer(); 
+  void subscribeRefereeSystem(const RefereeSystemMsg::SharedPtr msg);
+private:
+  void initConfig();
+  void initSendGoalOptions();
+  void initGoalMsg();
+  void sendGoal(const std::pair<float, float>& point);
+  void printMsg(const RefereeSystemMsg::SharedPtr msg) const;
+  void publishStatus();
+
+  rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr mActionClient;
+  rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions mSendGoalOptions;
+  nav2_msgs::action::NavigateToPose::Goal mGoalMsg;
+
 
   rclcpp::Subscription<RefereeSystemMsg>::SharedPtr mSerialSubscriber;
-  rclcpp::Publisher<NavigationClient>::SharedPtr mNavigationClientPublisher;
-  rclcpp::TimerBase::SharedPtr mNavigationClientTimer;
-  void publish();
+  rclcpp::Publisher<NavigationDecisionStatus>::SharedPtr mNavigationDecisionStatusPublisher;
+  rclcpp::TimerBase::SharedPtr mNavigationDecisionStatusTimer;
+
+
+  ClientStatus mClientStatus;
+  ServerStatus mServerStatus;
+  NavigationDecisionConfig mConfig;
 };
+
+
+
