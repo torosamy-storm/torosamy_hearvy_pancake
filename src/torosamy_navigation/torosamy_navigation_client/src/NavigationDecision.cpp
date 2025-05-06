@@ -26,9 +26,7 @@ NavigationDecision::NavigationDecision() :
 
 bool hasGoA = false;
 void NavigationDecision::subscribeRefereeSystem(const RefereeSystemMsg::SharedPtr msg) {
-    std::this_thread::sleep_for(std::chrono::seconds(mConfig.mTimeOff));
     printMsg(msg);
-
 
     if(msg->hp < mConfig.mHp) {
         sendGoal(mConfig.mHomePoint);
@@ -62,7 +60,7 @@ void NavigationDecision::initSendGoalOptions() {
     // 向导航服务器发送目标点时的回调函数
     send_goal_options.goal_response_callback = [this](GoalHandle::SharedPtr goal_handle) {
         if (!goal_handle) {
-            mServerStatus = ServerStatus::RUN_ERROR;
+            // mServerStatus = ServerStatus::RUN_ERROR;
             return;
         }
 
@@ -82,7 +80,7 @@ void NavigationDecision::initSendGoalOptions() {
     // 设置移动过程反馈回调函数
     send_goal_options.feedback_callback =[this] (GoalHandle::SharedPtr goal_handle, const std::shared_ptr<const nav2_msgs::action::NavigateToPose::Feedback> feedback) {
         if (!goal_handle) {
-            mServerStatus = ServerStatus::RUN_ERROR;
+            // mServerStatus = ServerStatus::RUN_ERROR;
             return;
         }
 

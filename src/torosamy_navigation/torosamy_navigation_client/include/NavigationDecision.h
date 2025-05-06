@@ -21,25 +21,7 @@ enum class ServerStatus {
     RUN_ERROR,
 };
 
-struct NavigationDecisionConfig {
-  short mHomeHp;
-  short mRemainBullet;
-  short mRemainTime;
-  short mHp;
-  short mTimeOff;
-  short mConnectMaxTimes;
-  short mConnectWaitOnceSecond;
-  bool mEnableDebug;
 
-  std::pair<float,float> mHomePoint;
-  std::pair<float,float> mPatrolPointA;
-  std::pair<float,float> mPatrolPointB;
-  std::pair<float,float> mTargetDoorPoint;
-  std::pair<float,float> mCenterPoint;
-
-
-  std::vector<bool> mDebugOption;
-};
 
 using torosamy_ros_msgs::msg::RefereeSystemMsg;
 using NavigationDecisionStatus = torosamy_ros_msgs::msg::NavigationClient;
@@ -64,11 +46,29 @@ private:
   rclcpp::Subscription<RefereeSystemMsg>::SharedPtr mSerialSubscriber;
   rclcpp::Publisher<NavigationDecisionStatus>::SharedPtr mNavigationDecisionStatusPublisher;
   rclcpp::TimerBase::SharedPtr mNavigationDecisionStatusTimer;
-
+  
+  struct {
+    short mHomeHp;
+    short mRemainBullet;
+    short mRemainTime;
+    short mHp;
+    short mTimeOff;
+    short mConnectMaxTimes;
+    short mConnectWaitOnceSecond;
+    bool mEnableDebug;
+  
+    std::pair<float,float> mHomePoint;
+    std::pair<float,float> mPatrolPointA;
+    std::pair<float,float> mPatrolPointB;
+    std::pair<float,float> mTargetDoorPoint;
+    std::pair<float,float> mCenterPoint;
+  
+  
+    std::vector<bool> mDebugOption;
+  }mConfig;
 
   ClientStatus mClientStatus;
   ServerStatus mServerStatus;
-  NavigationDecisionConfig mConfig;
 };
 
 

@@ -4,8 +4,12 @@
 #include "packet/NavigationPacket.h"
 #include "packet/RefereeSystemPacket.h"
 #include "pod/manager/PacketManager.h"
-
+#include "module/TorosamyModule.h"
+#include "yaml-cpp/yaml.h"
 using namespace Torosamy;
+// std::chrono::milliseconds(1),
+// std::chrono::microseconds(1),
+// std::chrono::seconds(1),
 SerialPortDecorator::SerialPortDecorator() : Node("serial_port_node") {
     //0 shoot
     mSendDataSubscriber0 = this->create_subscription<SendDataMsg>(
@@ -13,9 +17,8 @@ SerialPortDecorator::SerialPortDecorator() : Node("serial_port_node") {
     );
     mReceiveDataPublisher0 = this->create_publisher<ReceiveDataMsg>("receive_packet_0", 10);
     mReceiveDataTimer0 = this->create_wall_timer(
-        std::chrono::microseconds(1), std::bind(&SerialPortDecorator::publishReceiveData0, this)
+        std::chrono::milliseconds(1), std::bind(&SerialPortDecorator::publishReceiveData0, this)
     );
-    
 
 
     //1 shoot
@@ -24,7 +27,7 @@ SerialPortDecorator::SerialPortDecorator() : Node("serial_port_node") {
     );
     mReceiveDataPublisher1 = this->create_publisher<ReceiveDataMsg>("receive_packet_1", 10);
     mReceiveDataTimer1 = this->create_wall_timer(
-        std::chrono::microseconds(1), std::bind(&SerialPortDecorator::publishReceiveData1, this)
+        std::chrono::milliseconds(1), std::bind(&SerialPortDecorator::publishReceiveData1, this)
     );
 
 
@@ -33,7 +36,7 @@ SerialPortDecorator::SerialPortDecorator() : Node("serial_port_node") {
     //navigation
     mRefereeSystemPublisher = this->create_publisher<RefereeSystemMsg>("referee_system", 10);
     mRefereeSystemTimer = this->create_wall_timer(
-        std::chrono::microseconds(1), std::bind(&SerialPortDecorator::publishRefereeSystem, this)
+        std::chrono::seconds(1), std::bind(&SerialPortDecorator::publishRefereeSystem, this)
     );
 
     mCmdVelSubscriber = this->create_subscription<geometry_msgs::msg::Twist>(
