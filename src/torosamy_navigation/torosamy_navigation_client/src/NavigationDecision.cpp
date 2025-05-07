@@ -4,6 +4,7 @@ using namespace std::chrono_literals;
 
 NavigationDecision::NavigationDecision() : 
     Node("navigation_action_client"),
+    mIsWaiting(false),
     mClientStatus(ClientStatus::CONNECTING),
     mServerStatus(ServerStatus::UNKNOWN){
     mActionClient = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(this, "navigate_to_pose");
@@ -17,6 +18,11 @@ NavigationDecision::NavigationDecision() :
     mNavigationDecisionStatusTimer = this->create_wall_timer(
         std::chrono::microseconds(1000), std::bind(&NavigationDecision::publishStatus, this)
     );
+
+    mWaitPointTimer = this->create_wall_timer(
+        std::chrono::seconds(5), std::bind(&NavigationDecision::waitPoint, this)
+    );
+    mWaitPointTimer->cancel();
 
     initConfig();
     initSendGoalOptions();
@@ -33,7 +39,9 @@ void NavigationDecision::subscribeRefereeSystem(const RefereeSystemMsg::SharedPt
         hasGoA = false; 
         return;
     }
-
+    if(mIsWaiting) {
+        return;
+    }
 
     if (mServerStatus == ServerStatus::HANDLE_TASK) {
         return;
@@ -49,7 +57,9 @@ void NavigationDecision::subscribeRefereeSystem(const RefereeSystemMsg::SharedPt
     
 }
 
-
+void NavigationDecision::waitPoint() {
+    mIsWaiting = false;
+}
 
 
 void NavigationDecision::initSendGoalOptions() {
@@ -64,17 +74,10 @@ void NavigationDecision::initSendGoalOptions() {
             return;
         }
 
-        const std::string UUID = rclcpp_action::to_string(goal_handle->get_goal_id());
-        std::cout << UUID << std::endl;
+        // const std::string UUID = rclcpp_action::to_string(goal_handle->get_goal_id());
+        // std::cout << UUID << std::endl;
         
         // const int8_t current_status = goal_handle->get_status();
-        // rclcpp_action::GoalStatus::STATUS_ABORTED; // 目标被中止/失败，执行过程中发生错误未能成功完成。
-        // rclcpp_action::GoalStatus::STATUS_ACCEPTED; // 目标请求已被服务器接收并验证，准备开始处理。
-        // rclcpp_action::GoalStatus::STATUS_CANCELED; // 目标执行已被成功中止，通常是由于客户端的取消请求。
-        // rclcpp_action::GoalStatus::STATUS_CANCELING; // 服务器已收到取消请求，正在尝试停止目标的执行。
-        // rclcpp_action::GoalStatus::STATUS_EXECUTING; // 目标正在活跃地被动作服务器执行。
-        // rclcpp_action::GoalStatus::STATUS_SUCCEEDED; // 目标成功完成。
-        // rclcpp_action::GoalStatus::STATUS_UNKNOWN; // 目标的状态未知，可能由于通信问题或目标无效。
     };
 
     // 设置移动过程反馈回调函数
@@ -91,6 +94,8 @@ void NavigationDecision::initSendGoalOptions() {
     send_goal_options.result_callback = [this](const GoalHandle::WrappedResult& result) {
         if (rclcpp_action::ResultCode::SUCCEEDED == result.code) {
             mServerStatus = ServerStatus::WAIT_TASK;
+            mIsWaiting = true;
+            mWaitPointTimer->reset();
             return;
         }
         if (rclcpp_action::ResultCode::ABORTED == result.code) {

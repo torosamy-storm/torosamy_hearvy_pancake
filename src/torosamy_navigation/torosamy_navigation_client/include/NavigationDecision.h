@@ -37,6 +37,7 @@ private:
   void sendGoal(const std::pair<float, float>& point);
   void printMsg(const RefereeSystemMsg::SharedPtr msg) const;
   void publishStatus();
+  void waitPoint();
 
   rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SharedPtr mActionClient;
   rclcpp_action::Client<nav2_msgs::action::NavigateToPose>::SendGoalOptions mSendGoalOptions;
@@ -46,7 +47,10 @@ private:
   rclcpp::Subscription<RefereeSystemMsg>::SharedPtr mSerialSubscriber;
   rclcpp::Publisher<NavigationDecisionStatus>::SharedPtr mNavigationDecisionStatusPublisher;
   rclcpp::TimerBase::SharedPtr mNavigationDecisionStatusTimer;
-  
+
+  rclcpp::TimerBase::SharedPtr mWaitPointTimer;
+  bool mIsWaiting;
+
   struct {
     short mHomeHp;
     short mRemainBullet;
@@ -62,8 +66,7 @@ private:
     std::pair<float,float> mPatrolPointB;
     std::pair<float,float> mTargetDoorPoint;
     std::pair<float,float> mCenterPoint;
-  
-  
+
     std::vector<bool> mDebugOption;
   }mConfig;
 

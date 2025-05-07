@@ -21,7 +21,7 @@ Debug: true
 SafeCloneMode: false
 UsbPath: /dev/bus/usb/004/002
 BufferWaitTime: 1000
-
+SerialNumber: "045001220173"
 #锐度
 Sharpness: 40
 #曝光时间 曝光越低，图像越暗，帧率越高12000 0008

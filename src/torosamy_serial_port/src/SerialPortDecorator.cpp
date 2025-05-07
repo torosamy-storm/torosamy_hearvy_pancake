@@ -4,8 +4,7 @@
 #include "packet/NavigationPacket.h"
 #include "packet/RefereeSystemPacket.h"
 #include "pod/manager/PacketManager.h"
-#include "module/TorosamyModule.h"
-#include "yaml-cpp/yaml.h"
+
 using namespace Torosamy;
 // std::chrono::milliseconds(1),
 // std::chrono::microseconds(1),

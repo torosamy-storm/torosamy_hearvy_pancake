@@ -9,7 +9,7 @@ ConnectWaitOnceSecond: 5
 
 
 Debug:
-  enable: true
+  enable: false
   hp: true
   mode: true
   remain_time: true
@@ -28,11 +28,11 @@ HomePoint:
   x: 0.3003413677215576
   y: 0.05908632278442383
 PatrolPointA:
-  x: 5.000386714935303
-  y: 2.4382035732269287
+  x: 4.765523433685303
+  y: 1.2500563859939575
 PatrolPointB:
-  x: 2.5
-  y: 5.5
+  x: 6.294489860534668
+  y: -1.1023938655853271
 TargetDoorPoint:
   x: 2.5
   y: 5.5

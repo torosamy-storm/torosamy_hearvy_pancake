@@ -29,6 +29,7 @@ Debug: false
 SafeCloneMode: false
 UsbPath: /dev/bus/usb/004/001
 BufferWaitTime: 1000
+SerialNumber: "043182120169"
 
 #锐度
 Sharpness: 40

@@ -3,5 +3,5 @@ HeartJump:
   TimeOff: 1
 
 Debug:
-  Speed: false
+  Speed: true
 
